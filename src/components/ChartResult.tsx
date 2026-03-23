@@ -46,14 +46,21 @@ const MODULE_META: Record<string, { zh: { title: string; sub: string }; en: { ti
   '08': { zh: { title: '財運金錢', sub: '你怎麼賺、怎麼花、守不守得住' }, en: { title: 'Money Pattern', sub: 'How money moves through your life' } },
   '09': { zh: { title: '事業定位', sub: '你適合做什麼、何時轉型' }, en: { title: 'Career Path', sub: 'Where you belong and when to pivot' } },
   '10': { zh: { title: '健康壓力', sub: '你的身體弱點與壓力來源' }, en: { title: 'Health & Stress', sub: 'Your body and burnout patterns' } },
-  '11': { zh: { title: '流年運勢', sub: '今年的財運、感情、危險期' }, en: { title: 'Year Ahead', sub: 'Key shifts in money, love, and timing' } },
-  '12': { zh: { title: '每月行動', sub: '本月適合做什麼、不適合什麼' }, en: { title: 'Monthly Guide', sub: 'What to push, what to pause' } },
-  '13': { zh: { title: '開運策略', sub: '專屬你的行動建議' }, en: { title: 'Your Action Plan', sub: 'Three moves that change everything' } },
+  '11': { zh: { title: '流年全解讀', sub: '今年完整運勢＋全年流月＋每季開運（一次購買）' }, en: { title: 'Full Year Reading', sub: 'Complete year forecast + monthly guide + quarterly strategy (one-time)' } },
+  '12': { zh: { title: '流月更新', sub: '本月適合推進什麼、暫停什麼' }, en: { title: 'Monthly Update', sub: 'What to push, what to pause this month' } },
+  '13': { zh: { title: '季度開運', sub: '當季最值得做的 1 件事' }, en: { title: 'Quarterly Strategy', sub: 'The one move that matters most this season' } },
 };
 
 const FREE_ORDER = ['01', '02', '03', '06', '10'];
 const PAID_ORDER = ['04', '05', '07', '08', '09'];
 const SUB_ORDER  = ['11', '12', '13'];
+
+// Per-module price labels
+const SUB_PRICE: Record<string, { zh: string; en: string }> = {
+  '11': { zh: 'NT$399 一次', en: '$14 one-time' },
+  '12': { zh: 'NT$99/月',    en: '$3.99/mo' },
+  '13': { zh: 'NT$199/季',   en: '$6.99/qtr' },
+};
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 function LifeStarCard({ data, isZh }: { data: ChartData; isZh: boolean }) {
@@ -161,8 +168,8 @@ function LockedModuleCard({ id, preview, tier, isZh }: {
 }) {
   const meta = MODULE_META[id];
   const tierLabel = isZh
-    ? (tier === 'subscription' ? '訂閱制' : 'NT$299')
-    : (tier === 'subscription' ? 'Subscribe' : '$9.99');
+    ? (tier === 'subscription' ? (SUB_PRICE[id]?.zh ?? 'NT$99') : 'NT$299')
+    : (tier === 'subscription' ? (SUB_PRICE[id]?.en ?? '$3.99') : '$9.99');
   return (
     <div className={`rounded-2xl p-5 mb-4 relative overflow-hidden ${
       isZh
@@ -228,27 +235,35 @@ function PaywallBanner({ isZh, freeCount, totalCount }: {
           : `Including your love pattern, money blueprint, and this year's turning point`}
       </p>
       <div className="flex flex-col gap-3">
-        {/* Primary: monthly subscription */}
-        <a href="/pricing" className={`w-full py-3.5 rounded-full font-semibold text-sm transition-all ${
+        {/* Primary: full year reading (best value) */}
+        <a href="/pricing?plan=year" className={`w-full py-3.5 rounded-full font-semibold text-sm transition-all ${
           isZh
             ? 'bg-[#e8d5a3] text-[#0a0a1a] hover:bg-[#f0e4b8]'
             : 'bg-white text-[#1a1a2e] hover:bg-gray-100'
         }`}>
-          {isZh ? '訂閱每月命盤更新 NT$399/月 →' : 'Monthly Chart Updates · $14.99/mo →'}
+          {isZh ? '流年全解讀 NT$399（一次購買）→' : 'Full Year Reading · $14 one-time →'}
         </a>
         <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/50' : 'text-white/50'}`}>
-          {isZh ? '流年運勢 + 每月行動指南 + 開運策略，每月自動更新' : 'Year ahead + Monthly guide + Action plan, updated monthly'}
+          {isZh ? '今年完整運勢 ＋ 全年流月更新 ＋ 每季開運策略' : 'Full year forecast + 12 monthly updates + 4 quarterly strategies'}
         </p>
-        {/* Secondary: one-time full report */}
-        <a href="/report" className={`w-full py-3 rounded-full font-semibold text-sm transition-all border ${
+        {/* Secondary: quarterly */}
+        <a href="/pricing?plan=quarter" className={`w-full py-3 rounded-full font-semibold text-sm transition-all border ${
           isZh
             ? 'border-[#e8d5a3]/40 text-[#e8d5a3]/80 hover:border-[#e8d5a3]/70'
             : 'border-white/40 text-white/80 hover:border-white/70'
         }`}>
-          {isZh ? '一次購買完整解讀報告 NT$499 →' : 'Full Chart Report (one-time) · $19 →'}
+          {isZh ? '季度開運策略 NT$199/季 →' : 'Quarterly Strategy · $6.99/qtr →'}
+        </a>
+        {/* Tertiary: monthly */}
+        <a href="/pricing?plan=month" className={`w-full py-2.5 rounded-full text-sm transition-all border ${
+          isZh
+            ? 'border-[#e8d5a3]/20 text-[#e8d5a3]/50 hover:border-[#e8d5a3]/40'
+            : 'border-white/20 text-white/50 hover:border-white/40'
+        }`}>
+          {isZh ? '流月更新 NT$99/月' : 'Monthly Update · $3.99/mo'}
         </a>
         <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/30' : 'text-white/30'}`}>
-          {isZh ? '或單次解鎖單一模組 NT$299' : 'Or unlock individual modules for $9.99'}
+          {isZh ? '或單次解鎖付費模組 NT$299' : 'Or unlock individual paid modules for $9.99'}
         </p>
       </div>
     </div>

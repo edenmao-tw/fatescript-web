@@ -361,16 +361,16 @@ const LOCKED_PREVIEWS: Record<string, { zh: string; en: string }> = {
     en: "Your current role may not be your right stage. Where you belong has already been written — unlock to read it.",
   },
   '11': {
-    zh: '今年有一個關鍵轉折點，準確到可以標注月份。訂閱後查看。',
-    en: "This year has a key turning point specific enough to mark on a calendar. Subscribe to see when.",
+    zh: '今年有三個月份需要特別注意——一個是機會窗口，一個是高風險期，一個是你該收割的時間點。流年全解讀裡有完整的月份標注。',
+    en: "This year has three months worth marking — one opening, one danger zone, one harvest window. The Full Year Reading names all three.",
   },
   '12': {
-    zh: '本月有一件事你適合推進，有一件事你應該停下來。具體行動在訂閱內容裡。',
-    en: "This month has one thing to push and one thing to pause. The specific actions are inside the subscription.",
+    zh: '本月你的命盤有一件事特別適合推進，另一件事如果現在動手會耗費兩倍力氣。流月更新每月告訴你哪個是哪個。',
+    en: "This month your chart has one thing worth pushing — and one that will cost you double the effort if you start now. Monthly updates tell you which is which.",
   },
   '13': {
-    zh: '根據你的命盤，有三個具體行動可以改變你現在的卡關狀態。訂閱查看。',
-    en: "Based on your chart, there are three specific actions that can shift your current block. Subscribe to access them.",
+    zh: '這一季你的命盤有一個最值得做的方向調整——不是努力更多，是換一個施力點。季度開運策略每季給你這一個具體建議。',
+    en: "This season your chart points to one specific pivot — not working harder, but shifting where you apply effort. Quarterly strategy gives you that one move each season.",
   },
 };
 
