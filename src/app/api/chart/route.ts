@@ -313,24 +313,112 @@ function generateModuleContent(planetId: string, dignity: DignityKey, moduleId: 
     },
   };
 
-  // Module 03: inject time-specific content
+  // Module 03: 7 planets × 3 dignities = 21 unique life timing readings
   if (moduleId === '03') {
-    const timing = computeTimingWindow(birthDate ?? '1990-01-01');
-    const content03: Record<DignityKey, { zh: string; en: string }> = {
-      strong: {
-        zh: `你的黃金期不是別人說的「應該要成功的年紀」。根據你的命盤，${timing.zhLabel}之後你會進入一段明顯向上的節奏——現在你做的每一件事，都在被計算進去。`,
-        en: `Your peak doesn't follow anyone else's schedule. Based on your chart, from ${timing.enLabel} onward you'll enter a noticeably upward phase — everything you're doing now is accumulating toward it.`,
+    const { zhLabel: t, enLabel: te } = computeTimingWindow(birthDate ?? '1990-01-01');
+    type TimingMap = Record<string, Record<DignityKey, { zh: string; en: string }>>;
+    const content03: TimingMap = {
+      jupiter: {
+        strong: {
+          zh: `木星命強的人，擴張週期比別人明顯。從${t}開始，你會進入一段格局打開的節奏——過去幾年播的種，開始長出你看得到的東西。現在做的每一件事都在算數。`,
+          en: `With a strong Jupiter, your expansion cycles are vivid. From ${te}, you enter a phase where what you've planted starts visibly growing. Everything you're doing right now is counting.`,
+        },
+        balanced: {
+          zh: `木星命平的人，運氣不是突然來的，是積累後爆發的。從現在到${t}你在蓄積期——別人看起來沒動靜，但你的命盤在算時間。${t}後，機會會自己找上門。`,
+          en: `With Jupiter balanced, luck doesn't arrive suddenly — it accumulates then breaks. Until ${te} you're in the buildup phase. After ${te}, opportunities start arriving on their own.`,
+        },
+        challenged: {
+          zh: `木星命弱的人，不是沒機會，是時機還沒對。你過去可能在錯的時間點全力衝、撞了很多牆。${t}是一個節點——這之後你對方向的判斷會明顯比現在準。`,
+          en: `With Jupiter challenged, it's not that opportunities don't exist — the timing hasn't aligned yet. You may have pushed hard at the wrong moments. ${te} is the pivot where your direction sense sharpens significantly.`,
+        },
       },
-      balanced: {
-        zh: `你現在感覺有點卡，這是正常的。從現在到${timing.zhLabel}，你還在蓄力期，這段時間推不動是對的。${timing.zhLabel}開始，你會明顯感覺事情動起來了——不是一次大爆發，是持續往前。`,
-        en: `Feeling stuck right now is actually correct. From now until ${timing.enLabel} you're in a building phase — the resistance is real, not imaginary. Starting ${timing.enLabel}, things will begin to move — not all at once, but steadily forward.`,
+      venus: {
+        strong: {
+          zh: `金星命強，你的緣分和吸引力有明顯的週期高峰。從${t}開始，身邊的關係會有質量上的提升——不是數量增加，而是深度增加，你會遇到讓你覺得「值得的」那種連結。`,
+          en: `With Venus strong, your magnetism and connections peak in clear cycles. From ${te}, the quality of your relationships rises — not more, but deeper. You'll find connections that feel worth it.`,
+        },
+        balanced: {
+          zh: `金星命平，你的緣分有淡季有旺季。從現在到${t}是緣分的過渡期，適合整理關係、放下消耗你的人。${t}後你會遇到讓你覺得「對了」的人或機會。`,
+          en: `With Venus balanced, your connection cycles have off-seasons and peak seasons. Until ${te} is a transition — good time to clear out draining relationships. After ${te}, you'll meet people and opportunities that feel right.`,
+        },
+        challenged: {
+          zh: `金星命弱的人，感情和人際走得比別人坎坷一些。但${t}是一個轉換點——之後你對「什麼樣的關係是對的」的判斷會清晰很多，你會更清楚自己真正想要什麼。`,
+          en: `With Venus challenged, love and connection have been harder than average. But ${te} is a clarity point — after that, your sense of what's right for you sharpens considerably.`,
+        },
       },
-      challenged: {
-        zh: `你過去幾個月走得比較重。好消息是：${timing.zhLabel}是一個分水嶺。之後的每個月都會比現在好一點，不是突然開竅，而是你累積的東西開始有回報了。`,
-        en: `The past few months have been heavy. The good news: ${timing.enLabel} is a turning point. Each month after that will be incrementally better — not sudden clarity, but real returns on what you've been building.`,
+      saturn: {
+        strong: {
+          zh: `土星命強的人，黃金期比別人晚，但比別人紮實。從${t}開始，你之前一磚一瓦建起來的東西，開始被別人看見了。別人的成功是衝刺，你的成功是建築。`,
+          en: `With Saturn strong, your peak arrives later but lands harder. From ${te}, what you've built brick by brick starts being seen by others. Their success is a sprint — yours is architecture.`,
+        },
+        balanced: {
+          zh: `土星命平，你需要比別人多一點耐心，但成果比別人更持久。從現在到${t}，適合夯實基礎，不適合冒進。${t}後，你的穩定開始變成真正的優勢。`,
+          en: `With Saturn balanced, you need more patience than most, but your results outlast theirs. Until ${te}, focus on foundations, not breakthroughs. After ${te}, your steadiness becomes a real competitive edge.`,
+        },
+        challenged: {
+          zh: `土星命弱的人，你一直在努力，但感覺像在推一顆停不下來的石頭。好消息是：${t}之後那個阻力會明顯變小——不是消失，是你終於找到了施力的角度。`,
+          en: `With Saturn challenged, effort has felt like pushing a boulder uphill. The good news: after ${te} that resistance noticeably eases — not gone, but you finally find the right angle to push from.`,
+        },
+      },
+      moon: {
+        strong: {
+          zh: `月亮命強，你的節奏跟著直覺和情緒的潮汐走。從${t}開始，你的直覺會特別靈——這段時間做的決定，多信任自己的感覺，少找人商量。你比自己以為的更準。`,
+          en: `With the Moon strong, your rhythm follows intuition and emotional tides. From ${te}, your gut becomes especially reliable — trust your instincts more, seek less outside input. You're more accurate than you think.`,
+        },
+        balanced: {
+          zh: `月亮命平，你的能量有潮汐，起起落落是正常的。從現在到${t}是低潮期，保存能量比展開行動重要。${t}後你的狀態會明顯好轉，那時候推進需要情感投入的事，事半功倍。`,
+          en: `With Moon balanced, your energy ebbs and flows — that's normal. Until ${te} you're in an ebb phase; conserving matters more than expanding. After ${te}, your state improves noticeably. That's when to push emotionally-driven work.`,
+        },
+        challenged: {
+          zh: `月亮命弱的人，情緒週期比別人激烈，高的時候很高，低的時候很低。${t}是一個平衡點——之後你對自己情緒的理解會深很多，你會更知道怎麼讓自己穩下來。`,
+          en: `With Moon challenged, your emotional cycles are more intense than most — high highs, low lows. ${te} is a stabilization point — after that, your self-understanding deepens and you get better at knowing how to steady yourself.`,
+        },
+      },
+      mars: {
+        strong: {
+          zh: `火星命強，你的行動力有爆發週期。從${t}開始，你會進入一段「做什麼都有動力」的狀態——這段時間適合啟動你一直想做卻一直在等的事，窗口是真實的。`,
+          en: `With Mars strong, your drive comes in surge cycles. From ${te}, you enter a phase where motivation flows naturally — this is the real window to start what you've been waiting to launch.`,
+        },
+        balanced: {
+          zh: `火星命平，你的動力是間歇性的，不是長期穩定的。從現在到${t}你可能感覺力氣使不上。${t}後你的執行力會回來——那時候行動，比現在硬撐有效三倍。`,
+          en: `With Mars balanced, your drive comes in bursts, not a steady stream. Until ${te} you may feel like you're pushing through mud. After ${te}, execution capacity returns — acting then is three times more effective than forcing it now.`,
+        },
+        challenged: {
+          zh: `火星命弱的人，你不是沒有衝勁，是你的衝勁常常找不到對的出口，白白耗掉了。${t}是一個方向變清晰的時間點——你會開始知道哪些事值得衝，哪些事放掉反而更輕鬆。`,
+          en: `With Mars challenged, it's not that you lack drive — it's that it often has nowhere useful to go. ${te} is when direction clarifies. You'll start knowing which things are worth the push, and which to let go.`,
+        },
+      },
+      mercury: {
+        strong: {
+          zh: `水星命強，你的思維清晰度有週期高峰。從${t}開始，你的判斷力和表達都會特別到位——適合談判、做重要決定、說出你一直想說但說不出口的話。`,
+          en: `With Mercury strong, your mental clarity has peak cycles. From ${te}, your judgment and communication hit a high — ideal for negotiations, key decisions, and finally saying what you've needed to say.`,
+        },
+        balanced: {
+          zh: `水星命平，你的思維有時清晰有時混沌。從現在到${t}，你可能感覺想不清楚、說不到位。${t}後你的思路會突然打開——很多現在看不懂的事，那時候會自動想通。`,
+          en: `With Mercury balanced, your mind alternates between sharp and foggy. Until ${te}, clarity may feel elusive. After ${te}, your thinking opens up — many things that seem opaque right now will resolve on their own.`,
+        },
+        challenged: {
+          zh: `水星命弱的人，你常常有很好的想法，但傳達出去就走樣，或者時機不對。${t}是一個表達力提升的節點——之後你說的話更容易被聽到、被理解，你的想法開始有它應有的重量。`,
+          en: `With Mercury challenged, you often have good ideas that get lost in translation or land at the wrong time. ${te} is when that shifts — what you say starts being heard and understood the way you intended.`,
+        },
+      },
+      sun: {
+        strong: {
+          zh: `太陽命強，你的能見度和存在感有週期高峰。從${t}開始，你的光會特別亮——適合讓自己被看見，不管是升職、發表、還是開始新的事情，這個窗口是真的。`,
+          en: `With the Sun strong, your visibility peaks in cycles. From ${te}, your presence becomes especially magnetic — ideal for stepping forward, whether in career, creative work, or new beginnings. This window is real.`,
+        },
+        balanced: {
+          zh: `太陽命平，你的光不是一直亮著的，需要對的舞台。從現在到${t}是蓄光期，適合打磨自己，不急著曝光。${t}後，你會找到一個讓你真正發光的位置——不是所有人的舞台，是你的舞台。`,
+          en: `With Sun balanced, your light needs the right stage. Until ${te} is a polishing phase — refine, don't rush to be seen. After ${te}, you'll find the platform where you genuinely shine — not everyone's stage, yours.`,
+        },
+        challenged: {
+          zh: `太陽命弱的人，你常常感覺付出沒有被看見，努力和回報不成比例。${t}是一個轉折——之後你會開始被對的人看見。不是所有人，但是真正重要的那些人。`,
+          en: `With Sun challenged, your efforts often feel invisible — input and recognition rarely match. ${te} is the turning point. After that, the right people start noticing. Not everyone — but the ones who matter.`,
+        },
       },
     };
-    return content03[dignity][lang];
+    const planetContent = content03[planetId] ?? content03['jupiter'];
+    return planetContent[dignity][lang];
   }
 
   const mod = contentMap[moduleId];
