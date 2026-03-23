@@ -28,6 +28,7 @@ interface ChartData {
     dignityLabel: { zh: string; en: string };
     coreTruth: { zh: string; en: string };
     description: { zh: string; en: string };
+    insights: { zh: string[]; en: string[] };
   };
   name: string | null;
   modules: Record<string, ModuleData>;
@@ -87,9 +88,20 @@ function LifeStarCard({ data, isZh }: { data: ChartData; isZh: boolean }) {
       <p className={`text-base font-semibold mb-2 leading-snug ${isZh ? 'text-[#e8d5a3]' : 'text-white'}`}>
         「{isZh ? lifeStar.coreTruth.zh : lifeStar.coreTruth.en}」
       </p>
-      <p className={`text-sm leading-relaxed ${isZh ? 'text-[#e8d5a3]/70' : 'text-white/70'}`}>
+      <p className={`text-sm leading-relaxed mb-4 ${isZh ? 'text-[#e8d5a3]/70' : 'text-white/70'}`}>
         {isZh ? lifeStar.description.zh : lifeStar.description.en}
       </p>
+      {/* Extra insights */}
+      {lifeStar.insights && (
+        <div className={`border-t pt-4 space-y-2 ${isZh ? 'border-[#e8d5a3]/10' : 'border-white/10'}`}>
+          {(isZh ? lifeStar.insights.zh : lifeStar.insights.en).map((line, i) => (
+            <p key={i} className={`text-sm leading-relaxed flex gap-2 ${isZh ? 'text-[#e8d5a3]/60' : 'text-white/60'}`}>
+              <span className={`mt-0.5 shrink-0 ${isZh ? 'text-[#e8d5a3]/30' : 'text-white/30'}`}>·</span>
+              <span>{line}</span>
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
