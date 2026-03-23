@@ -59,18 +59,39 @@ const SUB_ORDER  = ['11', '12', '13'];
 function LifeStarCard({ data, isZh }: { data: ChartData; isZh: boolean }) {
   const { lifeStar, name } = data;
   return (
-    <div className={`rounded-2xl p-6 mb-8 ${
+    <div className={`rounded-2xl p-6 mb-8 relative overflow-hidden ${
       isZh
         ? 'bg-gradient-to-br from-[#1a1040] to-[#111128] border border-[#e8d5a3]/20'
         : 'bg-gradient-to-br from-[#1a1a2e] to-[#2d2d4e] text-white'
     }`}>
+      {/* Star dot grid — same as homepage */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none"
+        style={{ backgroundImage: 'radial-gradient(circle, #e8d5a3 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      {/* Soft glow top-right */}
+      <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(232,213,163,0.12) 0%, transparent 70%)' }} />
+      {/* Scattered accent stars */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[
+          { top: '15%', left: '80%', size: '3px', opacity: 0.5 },
+          { top: '60%', left: '88%', size: '2px', opacity: 0.35 },
+          { top: '30%', left: '92%', size: '4px', opacity: 0.4 },
+          { top: '75%', left: '75%', size: '2px', opacity: 0.3 },
+        ].map((s, i) => (
+          <div key={i} className="absolute rounded-full bg-[#e8d5a3]"
+            style={{ top: s.top, left: s.left, width: s.size, height: s.size, opacity: s.opacity }} />
+        ))}
+      </div>
+
+      {/* Content — above decorations */}
+      <div className="relative z-10">
       {name && (
         <p className={`text-xs mb-3 ${isZh ? 'text-[#e8d5a3]/50' : 'text-white/50'}`}>
           {isZh ? `${name} 的命盤` : `${name}'s Chart`}
         </p>
       )}
       <div className="flex items-center gap-3 mb-4">
-        <span className={`text-3xl ${isZh ? 'text-[#e8d5a3]' : 'text-white'}`}>{lifeStar.symbol}</span>
+        <span className="text-3xl text-white">{lifeStar.symbol}</span>
         <div>
           <p className={`text-xs mb-0.5 ${isZh ? 'text-[#e8d5a3]/50' : 'text-white/50'}`}>
             {isZh ? '命主星' : 'Life Star'}
@@ -102,6 +123,7 @@ function LifeStarCard({ data, isZh }: { data: ChartData; isZh: boolean }) {
           ))}
         </div>
       )}
+      </div>{/* end z-10 content wrapper */}
     </div>
   );
 }
