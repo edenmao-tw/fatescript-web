@@ -1,0 +1,60 @@
+{
+  "site": {
+    "name": "命運圖譜",
+    "tagline": "精準斷點的人生決策命盤",
+    "description": "幫你看清：感情、錢、人生轉折點"
+  },
+  "landing": {
+    "hero_title": "你現在卡在哪一關？",
+    "hero_sub": "輸入你的生日，七政四餘幫你看清人生脈絡",
+    "cta_free": "免費開始算命",
+    "sections": {
+      "love": "💕 感情卡關",
+      "money": "💰 錢卡關",
+      "career": "🏆 事業卡關",
+      "family": "🏠 家庭卡關"
+    }
+  },
+  "form": {
+    "name": "你的名字（選填）",
+    "birth_date": "出生日期",
+    "birth_time": "出生時間",
+    "birth_time_unknown": "不知道出生時間",
+    "birth_place": "出生地點",
+    "birth_place_placeholder": "搜尋城市...",
+    "gender": "性別",
+    "gender_male": "男",
+    "gender_female": "女",
+    "gender_other": "其他",
+    "submit": "解析我的命盤",
+    "loading": "計算中..."
+  },
+  "modules": {
+    "01": { "title": "核心人格", "subtitle": "你天生是什麼樣的人" },
+    "02": { "title": "思維決策", "subtitle": "你怎麼想、怎麼選擇" },
+    "03": { "title": "人生節奏", "subtitle": "你什麼時候開始走運" },
+    "04": { "title": "感情婚姻", "subtitle": "你的感情模式與婚姻時機" },
+    "05": { "title": "人際貴人", "subtitle": "誰是你的助力、誰是消耗" },
+    "06": { "title": "家庭原生", "subtitle": "原生家庭怎麼影響你" },
+    "07": { "title": "子女教養", "subtitle": "子女緣與教養方式" },
+    "08": { "title": "財運金錢", "subtitle": "你怎麼賺、怎麼花、守不守得住" },
+    "09": { "title": "事業定位", "subtitle": "你適合做什麼、何時轉型" },
+    "10": { "title": "健康壓力", "subtitle": "你的身體弱點與壓力來源" },
+    "11": { "title": "流年運勢", "subtitle": "今年的財運、感情、危險期" },
+    "12": { "title": "每月行動", "subtitle": "本月適合做什麼、不適合什麼" },
+    "13": { "title": "開運策略", "subtitle": "專屬你的行動建議" }
+  },
+  "tier": {
+    "free": "免費",
+    "paid": "單次解鎖",
+    "subscription": "訂閱制",
+    "unlock": "解鎖完整解讀",
+    "subscribe": "訂閱看更多",
+    "locked_hint": "付費解鎖完整分析"
+  },
+  "pricing": {
+    "module_price": "NT$299",
+    "subscription_price": "NT$399/月",
+    "bundle_price": "NT$999（全部模組）"
+  }
+}

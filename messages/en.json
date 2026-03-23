@@ -1,0 +1,60 @@
+{
+  "site": {
+    "name": "FateScript",
+    "tagline": "Your Personal Life Navigation System",
+    "description": "Understand yourself. Make better decisions. Act at the right time."
+  },
+  "landing": {
+    "hero_title": "What are you navigating right now?",
+    "hero_sub": "Ancient Chinese astrology meets modern self-understanding",
+    "cta_free": "Reveal My Chart",
+    "sections": {
+      "love": "💕 Love & Relationships",
+      "money": "💰 Money & Career",
+      "career": "🏆 Life Direction",
+      "family": "🏠 Family & Roots"
+    }
+  },
+  "form": {
+    "name": "Your name (optional)",
+    "birth_date": "Date of Birth",
+    "birth_time": "Time of Birth",
+    "birth_time_unknown": "I don't know my birth time",
+    "birth_place": "Place of Birth",
+    "birth_place_placeholder": "Search city...",
+    "gender": "Gender",
+    "gender_male": "Male",
+    "gender_female": "Female",
+    "gender_other": "Other",
+    "submit": "Reveal My Chart",
+    "loading": "Calculating..."
+  },
+  "modules": {
+    "01": { "title": "Core Identity", "subtitle": "Who you naturally are" },
+    "02": { "title": "Mind & Decisions", "subtitle": "How you think and choose" },
+    "03": { "title": "Life Rhythm", "subtitle": "When your life starts to expand" },
+    "04": { "title": "Love & Marriage", "subtitle": "Your relationship patterns" },
+    "05": { "title": "People & Mentors", "subtitle": "Who supports you, who drains you" },
+    "06": { "title": "Family Roots", "subtitle": "How your origins shape you" },
+    "07": { "title": "Children & Nurturing", "subtitle": "Your parenting energy" },
+    "08": { "title": "Wealth & Money", "subtitle": "How you earn, spend and hold money" },
+    "09": { "title": "Career & Purpose", "subtitle": "Your path and best timing" },
+    "10": { "title": "Health & Stress", "subtitle": "Your body signals and pressure points" },
+    "11": { "title": "Annual Forecast", "subtitle": "This year's opportunities and risks" },
+    "12": { "title": "Monthly Guidance", "subtitle": "What to do and avoid this month" },
+    "13": { "title": "Personal Strategy", "subtitle": "Your unique action blueprint" }
+  },
+  "tier": {
+    "free": "Free",
+    "paid": "One-time",
+    "subscription": "Subscription",
+    "unlock": "Unlock Full Reading",
+    "subscribe": "Subscribe for More",
+    "locked_hint": "Unlock the full analysis"
+  },
+  "pricing": {
+    "module_price": "$9.99",
+    "subscription_price": "$14.99/month",
+    "bundle_price": "$29.99 (All Modules)"
+  }
+}
