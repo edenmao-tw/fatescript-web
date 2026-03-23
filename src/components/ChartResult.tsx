@@ -141,7 +141,7 @@ function FreeModuleCard({ id, content, isZh }: { id: string; content: string; is
           isZh ? 'bg-[#e8d5a3]/10 text-[#e8d5a3]/50' : 'bg-gray-100 text-gray-400'
         }`}>{id}</span>
         <div>
-          <p className={`font-semibold text-sm ${isZh ? 'text-[#e8d5a3]' : 'text-[#1a1a2e]'}`}>
+          <p className={`font-semibold text-base ${isZh ? 'text-[#e8d5a3]' : 'text-[#1a1a2e]'}`}>
             {isZh ? meta.zh.title : meta.en.title}
           </p>
           <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/40' : 'text-gray-400'}`}>
@@ -175,7 +175,7 @@ function LockedModuleCard({ id, preview, tier, isZh }: {
         }`}>{id}</span>
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <p className={`font-semibold text-sm ${isZh ? 'text-[#e8d5a3]/60' : 'text-gray-400'}`}>
+            <p className={`font-semibold text-base ${isZh ? 'text-[#e8d5a3]/60' : 'text-gray-400'}`}>
               {isZh ? meta.zh.title : meta.en.title}
             </p>
             <span className={`text-xs px-2 py-0.5 rounded-full ${
