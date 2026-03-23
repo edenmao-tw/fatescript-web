@@ -54,7 +54,7 @@ function ZhHomePage() {
           {t('cta_free')}
         </Link>
 
-        <p className="mt-4 text-xs text-[#e8d5a3]/40">免費 · 不需要註冊 · 支援全球城市</p>
+        <p className="mt-4 text-xs text-[#e8d5a3]/40">{t('trust')}</p>
       </div>
     </main>
   );
