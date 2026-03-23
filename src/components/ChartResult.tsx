@@ -69,7 +69,7 @@ function LifeStarCard({ data, isZh }: { data: ChartData; isZh: boolean }) {
         </p>
       )}
       <div className="flex items-center gap-3 mb-4">
-        <span className="text-3xl">{lifeStar.symbol}</span>
+        <span className={`text-3xl ${isZh ? 'text-[#e8d5a3]' : 'text-white'}`}>{lifeStar.symbol}</span>
         <div>
           <p className={`text-xs mb-0.5 ${isZh ? 'text-[#e8d5a3]/50' : 'text-white/50'}`}>
             {isZh ? '命主星' : 'Life Star'}
@@ -194,14 +194,26 @@ function PaywallBanner({ isZh, freeCount, totalCount }: {
           : `Including your love pattern, money blueprint, and this year's turning point`}
       </p>
       <div className="flex flex-col gap-3">
+        {/* Primary: monthly subscription */}
         <a href="/pricing" className={`w-full py-3.5 rounded-full font-semibold text-sm transition-all ${
           isZh
             ? 'bg-[#e8d5a3] text-[#0a0a1a] hover:bg-[#f0e4b8]'
             : 'bg-white text-[#1a1a2e] hover:bg-gray-100'
         }`}>
-          {isZh ? '訂閱完整解讀 NT$399/月 →' : 'Unlock Full Reading · $14.99/mo →'}
+          {isZh ? '訂閱每月命盤更新 NT$399/月 →' : 'Monthly Chart Updates · $14.99/mo →'}
         </a>
-        <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/40' : 'text-white/40'}`}>
+        <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/50' : 'text-white/50'}`}>
+          {isZh ? '流年運勢 + 每月行動指南 + 開運策略，每月自動更新' : 'Year ahead + Monthly guide + Action plan, updated monthly'}
+        </p>
+        {/* Secondary: one-time full report */}
+        <a href="/report" className={`w-full py-3 rounded-full font-semibold text-sm transition-all border ${
+          isZh
+            ? 'border-[#e8d5a3]/40 text-[#e8d5a3]/80 hover:border-[#e8d5a3]/70'
+            : 'border-white/40 text-white/80 hover:border-white/70'
+        }`}>
+          {isZh ? '一次購買完整解讀報告 NT$499 →' : 'Full Chart Report (one-time) · $19 →'}
+        </a>
+        <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/30' : 'text-white/30'}`}>
           {isZh ? '或單次解鎖單一模組 NT$299' : 'Or unlock individual modules for $9.99'}
         </p>
       </div>

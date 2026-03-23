@@ -137,8 +137,24 @@ function pickFromDate(date: string) {
   return { planet, dignity };
 }
 
+// Compute timing window for 人生節奏 module (based on birth date + today)
+function computeTimingWindow(birthDate: string) {
+  const now = new Date();
+  const birthMonth = new Date(birthDate).getMonth() + 1; // 1–12
+  // Different birth-month quartiles map to different wait periods
+  const offsetMonths = birthMonth <= 3 ? 2 : birthMonth <= 6 ? 3 : birthMonth <= 9 ? 4 : 2;
+  const breakthroughDate = new Date(now.getFullYear(), now.getMonth() + offsetMonths, 1);
+  const zhMonths = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+  const enMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return {
+    zhLabel: `${breakthroughDate.getFullYear()}年${zhMonths[breakthroughDate.getMonth()]}`,
+    enLabel: `${enMonths[breakthroughDate.getMonth()]} ${breakthroughDate.getFullYear()}`,
+    offsetMonths,
+  };
+}
+
 // Free module content pool
-function generateModuleContent(planetId: string, dignity: DignityKey, moduleId: string, lang: 'zh' | 'en') {
+function generateModuleContent(planetId: string, dignity: DignityKey, moduleId: string, lang: 'zh' | 'en', birthDate?: string) {
   const contentMap: Record<string, Record<string, Record<DignityKey, { zh: string; en: string }>>> = {
     '01': { // 核心人格 / Core Identity
       preview: {
@@ -172,20 +188,11 @@ function generateModuleContent(planetId: string, dignity: DignityKey, moduleId: 
         },
       },
     },
-    '03': { // 人生節奏 / Life Timing
+    '03': { // 人生節奏 / Life Timing — content injected dynamically below
       preview: {
-        strong: {
-          zh: '你的黃金期不是別人說的「應該要成功的年紀」。你的時鐘跑得不一樣。',
-          en: "Your peak years don't follow the schedule others set. Your clock runs differently.",
-        },
-        balanced: {
-          zh: '你現在感覺卡住，可能是因為你正在走一個「蓄力期」，不是真的失敗。',
-          en: "If you feel stuck right now, it may be because you're in a building phase — not a failing one.",
-        },
-        challenged: {
-          zh: '你過去吃了很多虧，但那些虧讓你建起了別人沒有的判斷力。',
-          en: "You've paid more than your share of dues — but those costs bought you a judgment others don't have.",
-        },
+        strong: { zh: '', en: '' },
+        balanced: { zh: '', en: '' },
+        challenged: { zh: '', en: '' },
       },
     },
     '06': { // 家庭原生 / Family Roots
@@ -221,6 +228,26 @@ function generateModuleContent(planetId: string, dignity: DignityKey, moduleId: 
       },
     },
   };
+
+  // Module 03: inject time-specific content
+  if (moduleId === '03') {
+    const timing = computeTimingWindow(birthDate ?? '1990-01-01');
+    const content03: Record<DignityKey, { zh: string; en: string }> = {
+      strong: {
+        zh: `你的黃金期不是別人說的「應該要成功的年紀」。根據你的命盤，${timing.zhLabel}之後你會進入一段明顯向上的節奏——現在你做的每一件事，都在被計算進去。`,
+        en: `Your peak doesn't follow anyone else's schedule. Based on your chart, from ${timing.enLabel} onward you'll enter a noticeably upward phase — everything you're doing now is accumulating toward it.`,
+      },
+      balanced: {
+        zh: `你現在感覺有點卡，這是正常的。從現在到${timing.zhLabel}，你還在蓄力期，這段時間推不動是對的。${timing.zhLabel}開始，你會明顯感覺事情動起來了——不是一次大爆發，是持續往前。`,
+        en: `Feeling stuck right now is actually correct. From now until ${timing.enLabel} you're in a building phase — the resistance is real, not imaginary. Starting ${timing.enLabel}, things will begin to move — not all at once, but steadily forward.`,
+      },
+      challenged: {
+        zh: `你過去幾個月走得比較重。好消息是：${timing.zhLabel}是一個分水嶺。之後的每個月都會比現在好一點，不是突然開竅，而是你累積的東西開始有回報了。`,
+        en: `The past few months have been heavy. The good news: ${timing.enLabel} is a turning point. Each month after that will be incrementally better — not sudden clarity, but real returns on what you've been building.`,
+      },
+    };
+    return content03[dignity][lang];
+  }
 
   const mod = contentMap[moduleId];
   if (!mod) return lang === 'zh' ? '解讀生成中...' : 'Generating reading...';
@@ -288,8 +315,8 @@ export async function POST(req: NextRequest) {
     modules[id] = {
       tier: 'free',
       content: {
-        zh: generateModuleContent(planet.id, dignity, id, 'zh'),
-        en: generateModuleContent(planet.id, dignity, id, 'en'),
+        zh: generateModuleContent(planet.id, dignity, id, 'zh', birthDate),
+        en: generateModuleContent(planet.id, dignity, id, 'en', birthDate),
       },
     };
   }
