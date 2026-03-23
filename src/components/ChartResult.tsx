@@ -106,7 +106,7 @@ function LifeStarCard({ data, isZh }: { data: ChartData; isZh: boolean }) {
           </p>
         </div>
       </div>
-      <p className={`text-base font-semibold mb-2 leading-snug ${isZh ? 'text-[#e8d5a3]' : 'text-white'}`}>
+      <p className="text-base font-semibold mb-2 leading-snug text-white">
         「{isZh ? lifeStar.coreTruth.zh : lifeStar.coreTruth.en}」
       </p>
       <p className={`text-sm leading-relaxed mb-4 ${isZh ? 'text-[#e8d5a3]/70' : 'text-white/70'}`}>
