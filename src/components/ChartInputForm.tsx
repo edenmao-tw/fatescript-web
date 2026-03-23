@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
+// ─── Types ────────────────────────────────────────────────────────────────────
 interface City {
   name: string;
   country: string;
@@ -13,8 +14,11 @@ interface City {
 
 interface FormData {
   name: string;
-  birthDate: string;
-  birthTime: string;
+  birthYear: string;
+  birthMonth: string;
+  birthDay: string;
+  birthHour: string;
+  birthMinute: string;
   birthTimeUnknown: boolean;
   city: City | null;
   gender: 'male' | 'female' | 'other' | '';
@@ -24,14 +28,60 @@ interface ChartInputFormProps {
   locale: 'zh-TW' | 'en';
 }
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+const currentYear = new Date().getFullYear();
+const YEARS = Array.from({ length: currentYear - 1900 + 1 }, (_, i) => currentYear - i);
+const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+const HOURS = Array.from({ length: 24 }, (_, i) => i);
+const MINUTES = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+
+function daysInMonth(year: string, month: string) {
+  if (!year || !month) return 31;
+  return new Date(parseInt(year), parseInt(month), 0).getDate();
+}
+
+function pad(n: number) { return String(n).padStart(2, '0'); }
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+function SelectBox({
+  value, onChange, options, placeholder, isZh,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+  placeholder: string;
+  isZh: boolean;
+}) {
+  return (
+    <select
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      className={`flex-1 px-3 py-3 rounded-xl text-sm appearance-none cursor-pointer transition-colors ${
+        isZh
+          ? 'bg-[#0d0d25] border border-[#e8d5a3]/20 text-[#e8d5a3] focus:border-[#e8d5a3]/60 focus:outline-none'
+          : 'bg-white border border-gray-200 text-[#1a1a2e] focus:border-[#1a1a2e] focus:outline-none'
+      } ${!value ? (isZh ? 'text-[#e8d5a3]/30' : 'text-gray-400') : ''}`}
+    >
+      <option value="" disabled hidden>{placeholder}</option>
+      {options.map(o => (
+        <option key={o.value} value={o.value}>{o.label}</option>
+      ))}
+    </select>
+  );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
 export default function ChartInputForm({ locale }: ChartInputFormProps) {
   const isZh = locale === 'zh-TW';
   const router = useRouter();
 
   const [form, setForm] = useState<FormData>({
     name: '',
-    birthDate: '',
-    birthTime: '',
+    birthYear: '',
+    birthMonth: '',
+    birthDay: '',
+    birthHour: '',
+    birthMinute: '',
     birthTimeUnknown: false,
     city: null,
     gender: '',
@@ -44,6 +94,21 @@ export default function ChartInputForm({ locale }: ChartInputFormProps) {
   const [submitting, setSubmitting] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
+  // Dynamic day list based on selected year/month
+  const maxDays = daysInMonth(form.birthYear, form.birthMonth);
+  const DAYS = useMemo(
+    () => Array.from({ length: maxDays }, (_, i) => i + 1),
+    [maxDays]
+  );
+
+  // Reset day if it exceeds new month's max
+  useEffect(() => {
+    if (form.birthDay && parseInt(form.birthDay) > maxDays) {
+      setForm(f => ({ ...f, birthDay: String(maxDays) }));
+    }
+  }, [form.birthDay, maxDays]);
+
+  // City search with debounce
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (!cityQuery.trim() || cityQuery.length < 2) {
@@ -68,24 +133,34 @@ export default function ChartInputForm({ locale }: ChartInputFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.birthDate || !form.city || !form.gender) return;
+    const { birthYear, birthMonth, birthDay, city, gender } = form;
+    if (!birthYear || !birthMonth || !birthDay || !city || !gender) return;
     setSubmitting(true);
-    sessionStorage.setItem('chartInput', JSON.stringify(form));
+
+    const birthDate = `${birthYear}-${pad(parseInt(birthMonth))}-${pad(parseInt(birthDay))}`;
+    const birthTime = form.birthTimeUnknown
+      ? ''
+      : form.birthHour !== '' && form.birthMinute !== ''
+        ? `${pad(parseInt(form.birthHour))}:${pad(parseInt(form.birthMinute))}`
+        : '';
+
+    const payload = { ...form, birthDate, birthTime, city };
+    sessionStorage.setItem('chartInput', JSON.stringify(payload));
     router.push('/chart/result');
   };
 
-  // Shared style tokens per locale
-  const zhInput = 'bg-[#0d0d25] border border-[#e8d5a3]/20 text-[#e8d5a3] placeholder-[#e8d5a3]/30 focus:border-[#e8d5a3]/60 focus:outline-none';
-  const enInput = 'bg-white border border-gray-200 text-[#1a1a2e] placeholder-gray-400 focus:border-[#1a1a2e] focus:outline-none';
-  const inputCls = `w-full px-4 py-3 rounded-xl text-sm transition-colors ${isZh ? zhInput : enInput}`;
-
   const labelCls = `block text-sm mb-1.5 ${isZh ? 'text-[#e8d5a3]/70' : 'text-gray-600'}`;
+  const inputCls = `w-full px-4 py-3 rounded-xl text-sm transition-colors ${
+    isZh
+      ? 'bg-[#0d0d25] border border-[#e8d5a3]/20 text-[#e8d5a3] placeholder-[#e8d5a3]/30 focus:border-[#e8d5a3]/60 focus:outline-none'
+      : 'bg-white border border-gray-200 text-[#1a1a2e] placeholder-gray-400 focus:border-[#1a1a2e] focus:outline-none'
+  }`;
 
-  const genderGenders = [
-    { val: 'male', zh: '男', en: 'Male' },
-    { val: 'female', zh: '女', en: 'Female' },
-    { val: 'other', zh: '其他', en: 'Other' },
-  ];
+  const dividerCls = `text-sm ${isZh ? 'text-[#e8d5a3]/30' : 'text-gray-300'}`;
+
+  const isDateComplete = form.birthYear && form.birthMonth && form.birthDay;
+  const isTimeComplete = form.birthTimeUnknown || (form.birthHour !== '' && form.birthMinute !== '');
+  const canSubmit = isDateComplete && isTimeComplete && form.city && form.gender;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -104,45 +179,88 @@ export default function ChartInputForm({ locale }: ChartInputFormProps) {
         />
       </div>
 
-      {/* Birth date */}
+      {/* Birth date — 3 dropdowns */}
       <div>
         <label className={labelCls}>
           {isZh ? '出生日期' : 'Date of birth'}{' '}
           <span className="text-red-400">*</span>
         </label>
-        <input
-          type="date"
-          required
-          value={form.birthDate}
-          onChange={e => setForm(f => ({ ...f, birthDate: e.target.value }))}
-          className={inputCls}
-        />
+        <div className="flex gap-2 items-center">
+          {/* Year */}
+          <SelectBox
+            value={form.birthYear}
+            onChange={v => setForm(f => ({ ...f, birthYear: v }))}
+            options={YEARS.map(y => ({ value: String(y), label: String(y) }))}
+            placeholder={isZh ? '年' : 'Year'}
+            isZh={isZh}
+          />
+          <span className={dividerCls}>/</span>
+          {/* Month */}
+          <SelectBox
+            value={form.birthMonth}
+            onChange={v => setForm(f => ({ ...f, birthMonth: v }))}
+            options={MONTHS.map(m => ({
+              value: String(m),
+              label: isZh ? `${m}月` : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1],
+            }))}
+            placeholder={isZh ? '月' : 'Month'}
+            isZh={isZh}
+          />
+          <span className={dividerCls}>/</span>
+          {/* Day */}
+          <SelectBox
+            value={form.birthDay}
+            onChange={v => setForm(f => ({ ...f, birthDay: v }))}
+            options={DAYS.map(d => ({ value: String(d), label: isZh ? `${d}日` : String(d) }))}
+            placeholder={isZh ? '日' : 'Day'}
+            isZh={isZh}
+          />
+        </div>
       </div>
 
-      {/* Birth time */}
+      {/* Birth time — 2 dropdowns */}
       <div>
         <label className={labelCls}>
           {isZh ? '出生時間' : 'Time of birth'}
         </label>
-        <input
-          type="time"
-          value={form.birthTimeUnknown ? '' : form.birthTime}
-          disabled={form.birthTimeUnknown}
-          onChange={e => setForm(f => ({ ...f, birthTime: e.target.value }))}
-          className={`${inputCls} ${form.birthTimeUnknown ? 'opacity-30 cursor-not-allowed' : ''}`}
-        />
-        <label className={`flex items-center gap-2 mt-2 text-sm cursor-pointer select-none ${isZh ? 'text-[#e8d5a3]/60' : 'text-gray-500'}`}>
+        <div className={`flex gap-2 items-center ${form.birthTimeUnknown ? 'opacity-30 pointer-events-none' : ''}`}>
+          {/* Hour */}
+          <SelectBox
+            value={form.birthHour}
+            onChange={v => setForm(f => ({ ...f, birthHour: v }))}
+            options={HOURS.map(h => ({ value: String(h), label: isZh ? `${pad(h)} 時` : `${pad(h)}:00` }))}
+            placeholder={isZh ? '時' : 'Hour'}
+            isZh={isZh}
+          />
+          <span className={dividerCls}>:</span>
+          {/* Minute */}
+          <SelectBox
+            value={form.birthMinute}
+            onChange={v => setForm(f => ({ ...f, birthMinute: v }))}
+            options={MINUTES.map(m => ({ value: String(m), label: `${pad(m)} ${isZh ? '分' : 'min'}` }))}
+            placeholder={isZh ? '分' : 'Min'}
+            isZh={isZh}
+          />
+        </div>
+        <label className={`flex items-center gap-2 mt-2.5 text-sm cursor-pointer select-none ${
+          isZh ? 'text-[#e8d5a3]/60' : 'text-gray-500'
+        }`}>
           <input
             type="checkbox"
             checked={form.birthTimeUnknown}
-            onChange={e => setForm(f => ({ ...f, birthTimeUnknown: e.target.checked, birthTime: '' }))}
-            className="rounded w-4 h-4"
+            onChange={e => setForm(f => ({
+              ...f,
+              birthTimeUnknown: e.target.checked,
+              birthHour: '',
+              birthMinute: '',
+            }))}
+            className="w-4 h-4 rounded"
           />
           {isZh ? '不知道出生時間' : "I don't know my birth time"}
         </label>
       </div>
 
-      {/* Birth place */}
+      {/* Birth place — city search */}
       <div className="relative">
         <label className={labelCls}>
           {isZh ? '出生地點' : 'Place of birth'}{' '}
@@ -178,7 +296,9 @@ export default function ChartInputForm({ locale }: ChartInputFormProps) {
                 autoComplete="off"
               />
               {cityLoading && (
-                <span className={`absolute right-4 top-1/2 -translate-y-1/2 text-xs ${isZh ? 'text-[#e8d5a3]/40' : 'text-gray-400'}`}>
+                <span className={`absolute right-4 top-1/2 -translate-y-1/2 text-xs ${
+                  isZh ? 'text-[#e8d5a3]/40' : 'text-gray-400'
+                }`}>
                   {isZh ? '搜尋中' : 'Searching'}…
                 </span>
               )}
@@ -223,7 +343,11 @@ export default function ChartInputForm({ locale }: ChartInputFormProps) {
           <span className="text-red-400">*</span>
         </label>
         <div className="flex gap-3">
-          {genderGenders.map(g => {
+          {[
+            { val: 'male',   zh: '男', en: 'Male' },
+            { val: 'female', zh: '女', en: 'Female' },
+            { val: 'other',  zh: '其他', en: 'Other' },
+          ].map(g => {
             const selected = form.gender === g.val;
             return (
               <button
@@ -250,7 +374,7 @@ export default function ChartInputForm({ locale }: ChartInputFormProps) {
       {/* Submit */}
       <button
         type="submit"
-        disabled={!form.birthDate || !form.city || !form.gender || submitting}
+        disabled={!canSubmit || submitting}
         className={`w-full py-4 rounded-full text-base font-semibold transition-all mt-2 ${
           isZh
             ? 'bg-[#e8d5a3] text-[#0a0a1a] hover:bg-[#f0e4b8]'
