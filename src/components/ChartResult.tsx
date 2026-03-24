@@ -15,6 +15,7 @@ interface ChartInput {
 
 interface ModuleData {
   tier: 'free' | 'paid' | 'subscription';
+  tag?: string | null;
   content?: { zh: string; en: string };
   preview?: { zh: string; en: string };
 }
@@ -106,7 +107,11 @@ function LifeStarCard({ data, isZh }: { data: ChartData; isZh: boolean }) {
           <p className={`font-bold text-xl ${isZh ? 'text-[#e8d5a3]' : 'text-white'}`}>
             {isZh ? lifeStar.planetName.zh : lifeStar.planetName.en}
             <span className={`ml-2 text-sm font-normal px-2 py-0.5 rounded-full ${
-              isZh ? 'bg-[#e8d5a3]/15 text-[#e8d5a3]/70' : 'bg-white/15 text-white/70'
+              lifeStar.dignity === 'strong'
+                ? 'bg-amber-400/20 text-amber-300'       // 亮金
+                : lifeStar.dignity === 'balanced'
+                ? 'bg-emerald-400/20 text-emerald-300'    // 淺綠
+                : 'bg-gray-400/20 text-gray-400'          // 淡灰
             }`}>
               {isZh ? lifeStar.dignityLabel.zh : lifeStar.dignityLabel.en}
             </span>
@@ -135,8 +140,17 @@ function LifeStarCard({ data, isZh }: { data: ChartData; isZh: boolean }) {
   );
 }
 
-function FreeModuleCard({ id, content, isZh }: { id: string; content: string; isZh: boolean }) {
+function FreeModuleCard({ id, content, tag, dignity, isZh }: {
+  id: string; content: string; tag?: string | null; dignity?: string; isZh: boolean;
+}) {
   const meta = MODULE_META[id];
+  const dignityColor = dignity === 'strong'
+    ? 'bg-amber-400/15 text-amber-300 border-amber-400/30'
+    : dignity === 'balanced'
+    ? 'bg-emerald-400/15 text-emerald-300 border-emerald-400/30'
+    : dignity === 'challenged'
+    ? 'bg-gray-400/15 text-gray-400 border-gray-400/30'
+    : '';
   return (
     <div className={`rounded-2xl p-5 mb-4 ${
       isZh
@@ -147,16 +161,23 @@ function FreeModuleCard({ id, content, isZh }: { id: string; content: string; is
         <span className={`text-xs font-mono px-2 py-0.5 rounded-md ${
           isZh ? 'bg-[#e8d5a3]/10 text-[#e8d5a3]/50' : 'bg-gray-100 text-gray-400'
         }`}>{id}</span>
-        <div>
-          <p className={`font-semibold text-base ${isZh ? 'text-[#e8d5a3]' : 'text-[#1a1a2e]'}`}>
-            {isZh ? meta.zh.title : meta.en.title}
-          </p>
+        <div className="flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className={`font-semibold text-base ${isZh ? 'text-[#e8d5a3]' : 'text-[#1a1a2e]'}`}>
+              {isZh ? meta.zh.title : meta.en.title}
+            </p>
+            {tag && (
+              <span className={`text-xs px-2 py-0.5 rounded-full border ${dignityColor}`}>
+                {tag}
+              </span>
+            )}
+          </div>
           <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/40' : 'text-gray-400'}`}>
             {isZh ? meta.zh.sub : meta.en.sub}
           </p>
         </div>
       </div>
-      <p className={`text-sm leading-relaxed ${isZh ? 'text-[#e8d5a3]/80' : 'text-gray-600'}`}>
+      <p className={`text-sm leading-relaxed whitespace-pre-line ${isZh ? 'text-[#e8d5a3]/80' : 'text-gray-600'}`}>
         {content}
       </p>
     </div>
@@ -363,6 +384,7 @@ export default function ChartResult({ locale }: { locale: 'zh-TW' | 'en' }) {
   const freeContent = FREE_ORDER.map(id => ({
     id,
     content: (chartData.modules[id]?.content?.[isZh ? 'zh' : 'en']) ?? '',
+    tag: chartData.modules[id]?.tag ?? null,
   }));
 
   // Admin: collect full content for all paid/sub modules
@@ -372,6 +394,7 @@ export default function ChartResult({ locale }: { locale: 'zh-TW' | 'en' }) {
         content: (chartData.modules[id]?.content?.[isZh ? 'zh' : 'en'])
           ?? (chartData.modules[id]?.preview?.[isZh ? 'zh' : 'en'])
           ?? '',
+        tag: chartData.modules[id]?.tag ?? null,
       }))
     : [];
 
@@ -404,7 +427,7 @@ export default function ChartResult({ locale }: { locale: 'zh-TW' | 'en' }) {
 
         {/* Free modules */}
         {freeContent.map(m => (
-          <FreeModuleCard key={m.id} id={m.id} content={m.content} isZh={isZh} />
+          <FreeModuleCard key={m.id} id={m.id} content={m.content} tag={m.tag} dignity={chartData.lifeStar.dignity} isZh={isZh} />
         ))}
 
         {/* Admin badge */}
@@ -426,7 +449,7 @@ export default function ChartResult({ locale }: { locale: 'zh-TW' | 'en' }) {
         </p>
         {isAdmin
           ? adminPaidContent.filter(m => PAID_ORDER.includes(m.id)).map(m => (
-              <FreeModuleCard key={m.id} id={m.id} content={m.content} isZh={isZh} />
+              <FreeModuleCard key={m.id} id={m.id} content={m.content} tag={m.tag} dignity={chartData.lifeStar.dignity} isZh={isZh} />
             ))
           : PAID_ORDER.map(id => {
               const mod = chartData.modules[id];
@@ -448,7 +471,7 @@ export default function ChartResult({ locale }: { locale: 'zh-TW' | 'en' }) {
         </p>
         {isAdmin
           ? adminPaidContent.filter(m => SUB_ORDER.includes(m.id)).map(m => (
-              <FreeModuleCard key={m.id} id={m.id} content={m.content} isZh={isZh} />
+              <FreeModuleCard key={m.id} id={m.id} content={m.content} tag={m.tag} dignity={chartData.lifeStar.dignity} isZh={isZh} />
             ))
           : SUB_ORDER.map(id => {
               const mod = chartData.modules[id];

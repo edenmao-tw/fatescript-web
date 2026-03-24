@@ -1,4 +1,121 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { MODULE_CONTENT } from '@/data/moduleContent';
+
+// ─── Star tags: planet × dignity → keyword label ──────────────────────────────
+const STAR_TAGS: Record<string, Record<string, Record<string, string>>> = {
+  '01': {
+    sun:     { strong: '#耀眼領袖', balanced: '#正義化身', challenged: '#自尊受挫' },
+    moon:    { strong: '#通靈體質', balanced: '#平靜之水', challenged: '#情緒黑洞' },
+    mars:    { strong: '#開路先鋒', balanced: '#行動達人', challenged: '#無名火起' },
+    mercury: { strong: '#智力巔峰', balanced: '#靈活社交', challenged: '#神經焦慮' },
+    jupiter: { strong: '#天選之人', balanced: '#良善智者', challenged: '#盲目擴張' },
+    venus:   { strong: '#魅力磁鐵', balanced: '#和諧名士', challenged: '#感官依賴' },
+    saturn:  { strong: '#結構大師', balanced: '#踏實工匠', challenged: '#內在囚徒' },
+  },
+  '02': {
+    sun:     { strong: '#權威話語', balanced: '#透明溝通', challenged: '#主觀盲區' },
+    moon:    { strong: '#直覺思考', balanced: '#溫和感應', challenged: '#反覆無常' },
+    mars:    { strong: '#極速判斷', balanced: '#效率導向', challenged: '#語言攻擊' },
+    mercury: { strong: '#全腦開發', balanced: '#邏輯溝通', challenged: '#注意力缺失' },
+    jupiter: { strong: '#宏觀視野', balanced: '#知識傳播', challenged: '#忽略細節' },
+    venus:   { strong: '#外交手腕', balanced: '#平衡思考', challenged: '#虛偽奉承' },
+    saturn:  { strong: '#深思熟慮', balanced: '#務實邏輯', challenged: '#思維僵化' },
+  },
+  '04': {
+    sun:     { strong: '#豪門緣分', balanced: '#互信伴侶', challenged: '#權力鬥爭' },
+    moon:    { strong: '#靈魂對視', balanced: '#溫暖隊友', challenged: '#依附危機' },
+    mars:    { strong: '#燃情烈愛', balanced: '#直接互動', challenged: '#火爆關係' },
+    mercury: { strong: '#心靈相通', balanced: '#相談甚歡', challenged: '#冷暴力' },
+    jupiter: { strong: '#神仙眷侶', balanced: '#成長伴侶', challenged: '#期待失落' },
+    venus:   { strong: '#浪漫偶像', balanced: '#和諧蜜月', challenged: '#虛榮之愛' },
+    saturn:  { strong: '#金石之盟', balanced: '#穩重伴侶', challenged: '#冷漠之牆' },
+  },
+  '05': {
+    sun:     { strong: '#名流社交', balanced: '#正向人緣', challenged: '#面子社交' },
+    moon:    { strong: '#長輩照應', balanced: '#溫馨圈子', challenged: '#社交紛爭' },
+    mars:    { strong: '#鐵血隊友', balanced: '#熱血社交', challenged: '#小人頻繁' },
+    mercury: { strong: '#跨界人脈', balanced: '#才女才子', challenged: '#是非流言' },
+    jupiter: { strong: '#貴人滿天下', balanced: '#豐富資源', challenged: '#盲目信任' },
+    venus:   { strong: '#名媛仕紳', balanced: '#優雅公關', challenged: '#虛假繁榮' },
+    saturn:  { strong: '#忘年之交', balanced: '#精英縮影', challenged: '#社交封閉' },
+  },
+  '06': {
+    sun:     { strong: '#望族之子', balanced: '#溫暖家庭', challenged: '#父權陰影' },
+    moon:    { strong: '#母愛深厚', balanced: '#家庭根基', challenged: '#原生創傷' },
+    mars:    { strong: '#家族鬥士', balanced: '#獨立成長', challenged: '#家庭衝突' },
+    mercury: { strong: '#書香門第', balanced: '#開明教育', challenged: '#溝通隔閡' },
+    jupiter: { strong: '#家族福報', balanced: '#穩定支持', challenged: '#過度期待' },
+    venus:   { strong: '#美滿之家', balanced: '#和諧氛圍', challenged: '#情感匱乏' },
+    saturn:  { strong: '#嚴格家風', balanced: '#責任傳承', challenged: '#沉重束縛' },
+  },
+  '07': {
+    sun:     { strong: '#育兒之光', balanced: '#良好互動', challenged: '#控制教養' },
+    moon:    { strong: '#深層連結', balanced: '#溫柔陪伴', challenged: '#過度保護' },
+    mars:    { strong: '#競技教養', balanced: '#活力互動', challenged: '#衝突不斷' },
+    mercury: { strong: '#天才培育', balanced: '#知識傳承', challenged: '#言語傷害' },
+    jupiter: { strong: '#子女有成', balanced: '#教育福份', challenged: '#放任溺愛' },
+    venus:   { strong: '#藝術薰陶', balanced: '#甜蜜親子', challenged: '#物質替代' },
+    saturn:  { strong: '#嚴父慈心', balanced: '#紀律教養', challenged: '#冷漠距離' },
+  },
+  '08': {
+    sun:     { strong: '#財富之王', balanced: '#穩定收入', challenged: '#財務壓力' },
+    moon:    { strong: '#直覺理財', balanced: '#感性消費', challenged: '#情緒花費' },
+    mars:    { strong: '#投資悍將', balanced: '#積極理財', challenged: '#衝動花錢' },
+    mercury: { strong: '#金融天才', balanced: '#精打細算', challenged: '#投機冒險' },
+    jupiter: { strong: '#財源滾滾', balanced: '#豐盛穩健', challenged: '#過度消費' },
+    venus:   { strong: '#奢華品味', balanced: '#品質消費', challenged: '#敗家傾向' },
+    saturn:  { strong: '#財務鐵律', balanced: '#節儉持家', challenged: '#貧窮恐懼' },
+  },
+  '09': {
+    sun:     { strong: '#天生領導', balanced: '#穩步晉升', challenged: '#職場迷航' },
+    moon:    { strong: '#直覺事業', balanced: '#人和取勝', challenged: '#職涯漂泊' },
+    mars:    { strong: '#創業戰將', balanced: '#高效執行', challenged: '#職場衝突' },
+    mercury: { strong: '#策略軍師', balanced: '#多元發展', challenged: '#方向不定' },
+    jupiter: { strong: '#事業版圖', balanced: '#穩定拓展', challenged: '#眼高手低' },
+    venus:   { strong: '#品牌美學', balanced: '#人脈取勝', challenged: '#職場依賴' },
+    saturn:  { strong: '#大器晚成', balanced: '#踏實累積', challenged: '#職業倦怠' },
+  },
+  '10': {
+    sun:     { strong: '#生命之火', balanced: '#穩定能量', challenged: '#過勞預警' },
+    moon:    { strong: '#身心敏銳', balanced: '#情緒平衡', challenged: '#心因性疲憊' },
+    mars:    { strong: '#運動健將', balanced: '#活力充沛', challenged: '#發炎體質' },
+    mercury: { strong: '#神經靈敏', balanced: '#思緒清晰', challenged: '#焦慮體質' },
+    jupiter: { strong: '#天生好體質', balanced: '#均衡養生', challenged: '#代謝失調' },
+    venus:   { strong: '#五感享受', balanced: '#舒適養生', challenged: '#感官沉溺' },
+    saturn:  { strong: '#鐵人耐力', balanced: '#規律保養', challenged: '#慢性壓力' },
+  },
+};
+
+// ─── 9th House (遷移宮) overlay text for paid modules ────────────────────────
+const NINTH_HOUSE_OVERLAY: Record<string, Record<string, string>> = {
+  '04': {
+    'sun,jupiter': '🌎 異國良緣——你的伴侶極可能是外籍人士或具備高度國際視野，雙方常在旅行或留學中相遇。',
+    'mars,mercury': '🌎 異地奔波——容易陷入遠距離戀愛，感情在不斷的移動與數位溝通中升溫。',
+    'venus': '🌎 異國浪漫——容易在海外旅行中發生浪漫邂逅，或受不同文化風格的伴侶吸引。',
+  },
+  '05': {
+    'sun,jupiter,mercury': '🌎 跨國人脈——你的貴人不在家鄉，而在遠方或虛擬網路世界。適合經營國際社群，能獲得全球性資源。',
+    'saturn': '🌎 海外長輩——容易獲得海外華人前輩或國際專業機構的提拔，雖然過程嚴謹但發展穩健。',
+  },
+  '08': {
+    'sun,jupiter,venus': '🌎 外匯磁鐵——賺取外幣的能力極強，適合從事國際貿易、跨境電商或全球性投資。',
+    'mars,mercury': '🌎 財在遠方——適合頻繁出差、或是靠資訊時差賺錢，你的財富流動性強，越動越發。',
+  },
+  '09': {
+    'sun,jupiter': '🌎 跨國領袖——適合在跨國企業擔任高階主管，或在國際舞台上建立個人名聲。',
+    'mercury,venus': '🌎 文化使者——事業與翻譯、國際文化交流、海外公關或跨國數位內容創作高度相關。',
+    'mars': '🌎 海外開疆——適合擔任公司派遣到海外市場的先遣官，具備在陌生環境生存的極強鬥志。',
+  },
+};
+
+function getNinthHouseOverlay(moduleId: string, planetId: string): string | null {
+  const modOverlays = NINTH_HOUSE_OVERLAY[moduleId];
+  if (!modOverlays) return null;
+  for (const [key, text] of Object.entries(modOverlays)) {
+    if (key.split(',').includes(planetId)) return text;
+  }
+  return null;
+}
 
 // ─── Planet pool ─────────────────────────────────────────────────────────────
 const PLANETS = [
@@ -237,83 +354,9 @@ function computeTimingWindow(birthDate: string) {
   };
 }
 
-// Free module content pool
+// Generate module content — uses MODULE_CONTENT (189 pieces) + dynamic timing for module 03
 function generateModuleContent(planetId: string, dignity: DignityKey, moduleId: string, lang: 'zh' | 'en', birthDate?: string) {
-  const contentMap: Record<string, Record<string, Record<DignityKey, { zh: string; en: string }>>> = {
-    '01': { // 核心人格 / Core Identity
-      preview: {
-        strong: {
-          zh: '你天生就不適合被安排，你需要自己選擇自己的路。這不是任性，這是你的本質。',
-          en: "You were never meant to follow a script. Choosing your own path isn't stubbornness — it's your nature.",
-        },
-        balanced: {
-          zh: '你的核心性格是「橋樑」。你天生懂得在不同的人之間建立連結，這是你最深層的禮物。',
-          en: "Your core nature is the bridge-builder. You instinctively connect people across differences — that's your deepest gift.",
-        },
-        challenged: {
-          zh: '你表現出來的和你心裡真正想要的，往往不一樣。這個落差讓你很累。',
-          en: "What you show the world and what you actually want are often different. That gap is exhausting.",
-        },
-      },
-    },
-    '02': { // 思維決策 / Thinking Pattern
-      preview: {
-        strong: {
-          zh: '你做決定很快，但你的直覺比你的分析更可信。問題是你不相信自己的直覺。',
-          en: "You decide fast, but your instincts are more reliable than your analysis. The problem is you don't trust them.",
-        },
-        balanced: {
-          zh: '你習慣先想清楚再行動，但有時候想太多讓你錯過了時機。',
-          en: "You think before you act — but sometimes the thinking outlasts the window of opportunity.",
-        },
-        challenged: {
-          zh: '你的腦子裡有太多聲音。那個最小聲的，往往才是真的你。',
-          en: "There are too many voices in your head. The quietest one is usually the real you.",
-        },
-      },
-    },
-    '03': { // 人生節奏 / Life Timing — content injected dynamically below
-      preview: {
-        strong: { zh: '', en: '' },
-        balanced: { zh: '', en: '' },
-        challenged: { zh: '', en: '' },
-      },
-    },
-    '06': { // 家庭原生 / Family Roots
-      preview: {
-        strong: {
-          zh: '你從小就知道自己和家裡其他人不太一樣。這不是問題，這是線索。',
-          en: "You knew from a young age that you were different from the rest of your family. That's not a problem — it's a clue.",
-        },
-        balanced: {
-          zh: '你的原生家庭給了你力量，但也給了你一個你一直在試圖超越的框框。',
-          en: "Your family gave you strength — and a frame you've been trying to grow beyond ever since.",
-        },
-        challenged: {
-          zh: '你花了很多能量在修復一些不是你造成的事情。是時候停下來問：這是我的責任嗎？',
-          en: "You've spent enormous energy fixing things you didn't break. It's time to ask: is this mine to carry?",
-        },
-      },
-    },
-    '10': { // 健康壓力 / Health & Stress
-      preview: {
-        strong: {
-          zh: '你的身體承受壓力的能力很強，但你習慣忽略訊號，直到它大聲說話。',
-          en: "Your body handles pressure well — but you're used to ignoring its signals until they're impossible to miss.",
-        },
-        balanced: {
-          zh: '你的壓力通常不來自工作，而來自「沒有被理解」的感覺。',
-          en: "Your stress usually isn't from workload — it's from feeling fundamentally misunderstood.",
-        },
-        challenged: {
-          zh: '你的焦慮往往在深夜最重。那是你終於停下來，沒有辦法再假裝沒事的時候。',
-          en: "Your anxiety peaks at night — when you finally stop moving and can no longer pretend everything's fine.",
-        },
-      },
-    },
-  };
-
-  // Module 03: 7 planets × 3 dignities = 21 unique life timing readings
+  // Module 03 uses dynamic date injection
   if (moduleId === '03') {
     const { zhLabel: t, enLabel: te } = computeTimingWindow(birthDate ?? '1990-01-01');
     type TimingMap = Record<string, Record<DignityKey, { zh: string; en: string }>>;
@@ -421,9 +464,12 @@ function generateModuleContent(planetId: string, dignity: DignityKey, moduleId: 
     return planetContent[dignity][lang];
   }
 
-  const mod = contentMap[moduleId];
-  if (!mod) return lang === 'zh' ? '解讀生成中...' : 'Generating reading...';
-  return mod.preview?.[dignity]?.[lang] ?? (lang === 'zh' ? '解讀生成中...' : 'Generating reading...');
+  // All other modules: use MODULE_CONTENT (Chinese only for now; English falls back)
+  const zhContent = MODULE_CONTENT[moduleId]?.[planetId]?.[dignity];
+  if (lang === 'zh' && zhContent) return zhContent;
+  // English fallback — MODULE_CONTENT is Chinese-only for now
+  if (lang === 'en') return zhContent ?? 'Reading content coming soon...';
+  return '解讀生成中...';
 }
 
 // ─── Locked module previews (curiosity hooks) ────────────────────────────────
@@ -484,8 +530,10 @@ export async function POST(req: NextRequest) {
   const modules: Record<string, object> = {};
 
   for (const id of freeModules) {
+    const tag = STAR_TAGS[id]?.[planet.id]?.[dignity] ?? null;
     modules[id] = {
       tier: 'free',
+      tag,
       content: {
         zh: generateModuleContent(planet.id, dignity, id, 'zh', birthDate),
         en: generateModuleContent(planet.id, dignity, id, 'en', birthDate),
@@ -493,9 +541,22 @@ export async function POST(req: NextRequest) {
     };
   }
   for (const id of paidModules) {
+    const tag = STAR_TAGS[id]?.[planet.id]?.[dignity] ?? null;
+    // Full content for paid modules (shown to admin / paying users)
+    let zhContent = generateModuleContent(planet.id, dignity, id, 'zh', birthDate);
+    // Append 9th house overlay if applicable
+    const overlay = getNinthHouseOverlay(id, planet.id);
+    if (overlay) {
+      zhContent += '\n\n' + overlay;
+    }
     modules[id] = {
       tier: 'paid',
+      tag,
       preview: LOCKED_PREVIEWS[id],
+      content: {
+        zh: zhContent,
+        en: generateModuleContent(planet.id, dignity, id, 'en', birthDate),
+      },
     };
   }
   for (const id of subModules) {
