@@ -114,12 +114,28 @@ function ZhHomePage() {
   return (
     <main className="bg-[#0a0a1a] text-[#e8d5a3]">
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden min-h-screen flex flex-col items-center px-4 text-center" style={{ justifyContent: 'center', paddingBottom: '5rem' }}>
+      <section className="relative overflow-hidden flex flex-col items-center px-4 text-center pt-20 pb-24">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#1a1040_0%,_#0a0a1a_70%)]" />
         <div className="absolute inset-0 opacity-30"
           style={{ backgroundImage: 'radial-gradient(circle, #e8d5a3 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
 
         <div className="relative z-10 flex flex-col items-center">
+          {/* Intro blurb */}
+          <div className="max-w-2xl mb-10 space-y-4">
+            <p className="text-lg md:text-xl font-semibold text-white">
+              「12 星座是制服，七政四餘是量身定做。」
+            </p>
+            <p className="text-sm md:text-base text-[#e8d5a3]/70 leading-relaxed">
+              大部分人熟悉的「12 星座」，像是大數據下的集體標籤——全球有幾億人共享同一個星座。七政四餘不一樣，它是你出生那一刻，宇宙為你拍下的「星空斷層掃描」。
+            </p>
+            <p className="text-sm md:text-base text-[#e8d5a3]/70 leading-relaxed">
+              <strong className="text-[#e8d5a3]">「七政」</strong>是天空中真實運行的七顆行星，勾勒出你的天賦與行為模式；<strong className="text-[#e8d5a3]">「四餘」</strong>則是月亮軌道上四個看不見的能量交點，埋藏著你靈魂深處的執念、業力與福報。
+            </p>
+            <p className="text-sm md:text-base text-[#e8d5a3]/70 leading-relaxed">
+              兩者交織成一張只屬於你的星體地圖——不只告訴你「你是誰」，更揭示你為何這樣思考、為何在那裡卡住，以及最重要的：你什麼時候會迎來屬於你的風口。
+            </p>
+          </div>
+
           <div className="mb-6 px-4 py-1.5 border border-[#e8d5a3]/30 rounded-full text-sm tracking-widest text-[#e8d5a3]/70">
             七政四餘 · 天文命理
           </div>
@@ -147,10 +163,10 @@ function ZhHomePage() {
         </div>
 
         {/* Scroll hint */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-10">
-          <p className="text-xs text-[#e8d5a3]/30 tracking-widest">什麼是七政四餘？</p>
+        <div className="mt-10 flex flex-col items-center gap-1 z-10">
+          <p className="text-sm text-white/70 tracking-widest">什麼是七政四餘？</p>
           <svg
-            className="w-5 h-5 text-[#e8d5a3]/30 animate-bounce"
+            className="w-5 h-5 text-white/50 animate-bounce"
             fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
