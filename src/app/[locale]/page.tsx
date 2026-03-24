@@ -20,10 +20,30 @@ const PLANETS = [
 ];
 
 const SIYU = [
-  { symbol: '☊', name: '羅睺', role: '你的靈魂方向', desc: '北交點。代表你這輩子應該往哪裡走、你的成長方向。它讓你感到陌生，卻又莫名吸引你。' },
-  { symbol: '☋', name: '計都', role: '你帶來的習慣', desc: '南交點。代表你熟悉的舒適圈和過去生命帶來的本能。它是才能，也可能是讓你原地打轉的習慣。' },
-  { symbol: '☯', name: '紫氣', role: '隱藏的貴氣', desc: '月亮軌道的隱形力量點。紫氣落在哪裡，那個領域就有一種說不清楚的好運氣，機緣往往在意料之外出現。' },
-  { symbol: '◉', name: '月孛', role: '隱藏的阻力', desc: '月亮的暗面。月孛代表你最難突破的慣性，那個領域特別容易感覺卡住、繞圈子，但突破之後成長也最深。' },
+  {
+    symbol: '☊', name: '羅睺', role: '你的靈魂方向',
+    desc: '代表你這輩子應該往哪裡走、你的成長方向。它讓你感到陌生，卻又莫名吸引你——那種「我好像應該往那裡去」的感覺，就是羅睺在召喚你。',
+    western: '北交點 North Node',
+    westernNote: '西洋占星 & 印度占星（Rahu）完全對應。象徵靈魂這一世需要學習與擴張的方向，帶有木星與火星混合的衝勁。',
+  },
+  {
+    symbol: '☋', name: '計都', role: '你帶來的習慣',
+    desc: '代表你熟悉的舒適圈和過去生命帶來的本能。它是天生的才能，也可能是讓你原地打轉的慣性——你太熟練了，所以沒有察覺它正在限制你。',
+    western: '南交點 South Node',
+    westernNote: '西洋占星 & 印度占星（Ketu）完全對應。象徵業力與舊有模式，帶有土星的冷靜與孤獨感，也代表解脫與放下。',
+  },
+  {
+    symbol: '◉', name: '月孛', role: '隱藏的執念',
+    desc: '月亮軌道的遠地點，代表你最深層、最難被自己察覺的陰暗面。月孛落在哪裡，那個領域就容易有強烈的執念或糾纏，突破之後成長也最深。',
+    western: '黑月莉莉絲 Black Moon Lilith',
+    westernNote: '與西洋占星的黑月莉莉絲（月球軌道遠地點）高度吻合。象徵原始慾望、陰暗面與叛逆能量，也是最難被社會接受的那部分自我。',
+  },
+  {
+    symbol: '✦', name: '紫氣', role: '隱藏的貴氣',
+    desc: '四餘中唯一純吉的力量點。紫氣落在哪裡，那個領域就有說不清楚的好運氣與守護感，往往在你最需要的時候莫名其妙「安全下莊」。',
+    western: '白月 Selena / White Moon',
+    westernNote: '對應東歐占星流派的白月（Selena）。象徵神性保護、道德福報與靈性善因，是命盤中的守護天使。若月孛是命盤的「魔」，紫氣就是「佛性」。',
+  },
 ];
 
 const ZODIAC_SEASONS = [
@@ -85,7 +105,7 @@ const HOUSES = [
   { num: '09', name: '遷移宮', topic: '遠行與視野' },
   { num: '10', name: '官祿宮', topic: '事業與名聲' },
   { num: '11', name: '福德宮', topic: '貴人與夢想' },
-  { num: '12', name: '相貌宮', topic: '隱藏的自己' },
+  { num: '12', name: '業力玄秘宮', topic: '潛意識、你不自覺的重複' },
 ];
 
 function ZhHomePage() {
@@ -244,7 +264,7 @@ function ZhHomePage() {
         </div>
 
         {/* 四餘 grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           {SIYU.map((s) => (
             <div key={s.name} className="border border-[#9b8fd4]/20 rounded-2xl p-5 bg-[#9b8fd4]/5 hover:bg-[#9b8fd4]/8 transition-all">
               <div className="flex items-center gap-3 mb-3">
@@ -254,9 +274,27 @@ function ZhHomePage() {
                   <span className="ml-2 text-xs text-[#9b8fd4]/60">{s.role}</span>
                 </div>
               </div>
-              <p className="text-sm text-[#e8d5a3]/60 leading-relaxed">{s.desc}</p>
+              <p className="text-sm text-[#e8d5a3]/60 leading-relaxed mb-3">{s.desc}</p>
+              {/* Western astrology correspondence */}
+              <div className="border-t border-[#9b8fd4]/10 pt-3">
+                <p className="text-xs text-[#9b8fd4]/70 font-semibold mb-1">
+                  ≈ {s.western}
+                </p>
+                <p className="text-xs text-[#e8d5a3]/35 leading-relaxed">{s.westernNote}</p>
+              </div>
             </div>
           ))}
+        </div>
+        {/* 四餘 callout */}
+        <div className="border border-[#9b8fd4]/15 rounded-2xl p-5 mb-16 bg-[#9b8fd4]/3">
+          <p className="text-sm text-[#e8d5a3]/60 leading-relaxed">
+            <span className="text-[#9b8fd4] font-semibold">💡 為什麼四餘和西洋占星有對應？</span><br /><br />
+            羅睺和計都是唐代從印度占星（Vedic Astrology）傳入中國的，本質上就是西洋占星的南北交點。
+            月孛和黑月莉莉絲都是月球軌道上的特殊點，代表同一種陰暗面能量。
+            東西方各自獨立發展出相似的觀察，說明這些點有其天文上的真實性。
+            <br /><br />
+            <span className="text-[#e8d5a3]/40">用西洋占星軟體如 Astro.com 可直接找到北交點（North Node）、黑月莉莉絲（Lilith）的位置，用於輔助參考。</span>
+          </p>
         </div>
 
         {/* Divider */}
