@@ -235,35 +235,50 @@ function PaywallBanner({ isZh, freeCount, totalCount }: {
           : `Including your love pattern, money blueprint, and this year's turning point`}
       </p>
       <div className="flex flex-col gap-3">
-        {/* Primary: full year reading (best value) */}
-        <a href="/pricing?plan=year" className={`w-full py-3.5 rounded-full font-semibold text-sm transition-all ${
+        {/* Primary: complete chart report (one-time, most comprehensive) */}
+        <a href="/pricing?plan=full" className={`w-full py-3.5 rounded-full font-semibold text-sm transition-all ${
           isZh
             ? 'bg-[#e8d5a3] text-[#0a0a1a] hover:bg-[#f0e4b8]'
             : 'bg-white text-[#1a1a2e] hover:bg-gray-100'
         }`}>
-          {isZh ? '流年全解讀 NT$399（一次購買）→' : 'Full Year Reading · $14 one-time →'}
+          {isZh ? '完整星盤解讀 NT$499（詳細報告）→' : 'Complete Chart Report · $17 one-time →'}
         </a>
         <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/50' : 'text-white/50'}`}>
-          {isZh ? '今年完整運勢 ＋ 全年流月更新 ＋ 每季開運策略' : 'Full year forecast + 12 monthly updates + 4 quarterly strategies'}
+          {isZh ? '全 13 個模組完整版 ＋ 個人化詳細解說 ＋ 一份完整 PDF 報告' : 'All 13 modules in full + personalised deep-dive + complete PDF report'}
         </p>
-        {/* Secondary: quarterly */}
-        <a href="/pricing?plan=quarter" className={`w-full py-3 rounded-full font-semibold text-sm transition-all border ${
+
+        {/* Secondary: full year (ongoing value) */}
+        <a href="/pricing?plan=year" className={`w-full py-3 rounded-full font-semibold text-sm transition-all border ${
           isZh
             ? 'border-[#e8d5a3]/40 text-[#e8d5a3]/80 hover:border-[#e8d5a3]/70'
             : 'border-white/40 text-white/80 hover:border-white/70'
         }`}>
-          {isZh ? '季度開運策略 NT$199/季 →' : 'Quarterly Strategy · $6.99/qtr →'}
+          {isZh ? '流年全解讀 NT$399（今年運勢）→' : 'Full Year Reading · $14 one-time →'}
         </a>
-        {/* Tertiary: monthly */}
-        <a href="/pricing?plan=month" className={`w-full py-2.5 rounded-full text-sm transition-all border ${
-          isZh
-            ? 'border-[#e8d5a3]/20 text-[#e8d5a3]/50 hover:border-[#e8d5a3]/40'
-            : 'border-white/20 text-white/50 hover:border-white/40'
-        }`}>
-          {isZh ? '流月更新 NT$99/月' : 'Monthly Update · $3.99/mo'}
-        </a>
-        <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/30' : 'text-white/30'}`}>
-          {isZh ? '或單次解鎖付費模組 NT$299' : 'Or unlock individual paid modules for $9.99'}
+        <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/35' : 'text-white/35'}`}>
+          {isZh ? '今年完整運勢 ＋ 全年流月更新 ＋ 每季開運策略' : 'Full year forecast + 12 monthly updates + 4 quarterly strategies'}
+        </p>
+
+        {/* Tertiary options */}
+        <div className={`flex gap-2`}>
+          <a href="/pricing?plan=quarter" className={`flex-1 py-2.5 rounded-full text-xs transition-all border text-center ${
+            isZh
+              ? 'border-[#e8d5a3]/20 text-[#e8d5a3]/50 hover:border-[#e8d5a3]/40'
+              : 'border-white/20 text-white/50 hover:border-white/40'
+          }`}>
+            {isZh ? '季度開運 NT$199' : 'Quarterly $6.99'}
+          </a>
+          <a href="/pricing?plan=month" className={`flex-1 py-2.5 rounded-full text-xs transition-all border text-center ${
+            isZh
+              ? 'border-[#e8d5a3]/20 text-[#e8d5a3]/50 hover:border-[#e8d5a3]/40'
+              : 'border-white/20 text-white/50 hover:border-white/40'
+          }`}>
+            {isZh ? '流月更新 NT$99' : 'Monthly $3.99'}
+          </a>
+        </div>
+
+        <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/25' : 'text-white/25'}`}>
+          {isZh ? '或單次解鎖個別模組 NT$299' : 'Or unlock individual modules for $9.99'}
         </p>
       </div>
     </div>
