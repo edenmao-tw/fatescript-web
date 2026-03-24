@@ -291,6 +291,11 @@ export default function ChartResult({ locale }: { locale: 'zh-TW' | 'en' }) {
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsAdmin(localStorage.getItem('fsAdmin') === 'true');
+  }, []);
 
   useEffect(() => {
     async function load() {
@@ -360,6 +365,16 @@ export default function ChartResult({ locale }: { locale: 'zh-TW' | 'en' }) {
     content: (chartData.modules[id]?.content?.[isZh ? 'zh' : 'en']) ?? '',
   }));
 
+  // Admin: collect full content for all paid/sub modules
+  const adminPaidContent = isAdmin
+    ? [...PAID_ORDER, ...SUB_ORDER].map(id => ({
+        id,
+        content: (chartData.modules[id]?.content?.[isZh ? 'zh' : 'en'])
+          ?? (chartData.modules[id]?.preview?.[isZh ? 'zh' : 'en'])
+          ?? '',
+      }))
+    : [];
+
   return (
     <main className={`min-h-screen ${isZh ? 'bg-[#0a0a1a]' : 'bg-[#f8f4ef]'}`}>
       {/* Top nav */}
@@ -392,46 +407,60 @@ export default function ChartResult({ locale }: { locale: 'zh-TW' | 'en' }) {
           <FreeModuleCard key={m.id} id={m.id} content={m.content} isZh={isZh} />
         ))}
 
-        {/* Paywall banner */}
-        <PaywallBanner isZh={isZh} freeCount={5} totalCount={13} />
+        {/* Admin badge */}
+        {isAdmin && (
+          <div className="mb-4 px-4 py-2 rounded-xl border border-emerald-500/30 bg-emerald-900/10 flex items-center justify-between">
+            <span className="text-xs text-emerald-400">✓ 作者模式：顯示所有完整內容</span>
+            <a href="/admin" className="text-xs text-emerald-400/60 hover:text-emerald-400 underline">管理</a>
+          </div>
+        )}
 
-        {/* Locked paid modules */}
+        {/* Paywall banner — hidden in admin mode */}
+        {!isAdmin && <PaywallBanner isZh={isZh} freeCount={5} totalCount={13} />}
+
+        {/* Paid modules */}
         <p className={`text-xs font-semibold tracking-widest mb-4 ${
           isZh ? 'text-[#e8d5a3]/30' : 'text-gray-300'
         }`}>
           {isZh ? '付費解讀' : 'PAID READINGS'}
         </p>
-        {PAID_ORDER.map(id => {
-          const mod = chartData.modules[id];
-          return (
-            <LockedModuleCard
-              key={id}
-              id={id}
-              preview={isZh ? (mod.preview?.zh ?? '') : (mod.preview?.en ?? '')}
-              tier="paid"
-              isZh={isZh}
-            />
-          );
-        })}
+        {isAdmin
+          ? adminPaidContent.filter(m => PAID_ORDER.includes(m.id)).map(m => (
+              <FreeModuleCard key={m.id} id={m.id} content={m.content} isZh={isZh} />
+            ))
+          : PAID_ORDER.map(id => {
+              const mod = chartData.modules[id];
+              return (
+                <LockedModuleCard
+                  key={id} id={id}
+                  preview={isZh ? (mod.preview?.zh ?? '') : (mod.preview?.en ?? '')}
+                  tier="paid" isZh={isZh}
+                />
+              );
+            })
+        }
 
-        {/* Locked subscription modules */}
+        {/* Subscription modules */}
         <p className={`text-xs font-semibold tracking-widest mb-4 mt-2 ${
           isZh ? 'text-[#e8d5a3]/30' : 'text-gray-300'
         }`}>
           {isZh ? '訂閱制解讀' : 'SUBSCRIPTION READINGS'}
         </p>
-        {SUB_ORDER.map(id => {
-          const mod = chartData.modules[id];
-          return (
-            <LockedModuleCard
-              key={id}
-              id={id}
-              preview={isZh ? (mod.preview?.zh ?? '') : (mod.preview?.en ?? '')}
-              tier="subscription"
-              isZh={isZh}
-            />
-          );
-        })}
+        {isAdmin
+          ? adminPaidContent.filter(m => SUB_ORDER.includes(m.id)).map(m => (
+              <FreeModuleCard key={m.id} id={m.id} content={m.content} isZh={isZh} />
+            ))
+          : SUB_ORDER.map(id => {
+              const mod = chartData.modules[id];
+              return (
+                <LockedModuleCard
+                  key={id} id={id}
+                  preview={isZh ? (mod.preview?.zh ?? '') : (mod.preview?.en ?? '')}
+                  tier="subscription" isZh={isZh}
+                />
+              );
+            })
+        }
 
         {/* Bottom CTA */}
         <div className="mt-8 text-center">

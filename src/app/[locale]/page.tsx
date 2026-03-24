@@ -94,7 +94,7 @@ function ZhHomePage() {
   return (
     <main className="bg-[#0a0a1a] text-[#e8d5a3]">
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden min-h-screen flex flex-col items-center justify-center px-4 text-center">
+      <section className="relative overflow-hidden min-h-screen flex flex-col items-center px-4 text-center" style={{ justifyContent: 'center', paddingBottom: '5rem' }}>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#1a1040_0%,_#0a0a1a_70%)]" />
         <div className="absolute inset-0 opacity-30"
           style={{ backgroundImage: 'radial-gradient(circle, #e8d5a3 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
@@ -124,6 +124,17 @@ function ZhHomePage() {
             {t('cta_free')}
           </Link>
           <p className="mt-4 text-xs text-[#e8d5a3]/40">{t('trust')}</p>
+        </div>
+
+        {/* Scroll hint */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-10">
+          <p className="text-xs text-[#e8d5a3]/30 tracking-widest">什麼是七政四餘？</p>
+          <svg
+            className="w-5 h-5 text-[#e8d5a3]/30 animate-bounce"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
       </section>
 
