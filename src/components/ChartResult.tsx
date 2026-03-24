@@ -241,7 +241,7 @@ function PaywallBanner({ isZh, freeCount, totalCount }: {
             ? 'bg-[#e8d5a3] text-[#0a0a1a] hover:bg-[#f0e4b8]'
             : 'bg-white text-[#1a1a2e] hover:bg-gray-100'
         }`}>
-          {isZh ? '完整星盤解讀 NT$499（詳細報告）→' : 'Complete Chart Report · $17 one-time →'}
+          {isZh ? '完整星盤解讀 NT$588（詳細報告）→' : 'Complete Chart Report · $19 one-time →'}
         </a>
         <p className={`text-xs ${isZh ? 'text-[#e8d5a3]/50' : 'text-white/50'}`}>
           {isZh ? '全 13 個模組完整版 ＋ 個人化詳細解說 ＋ 一份完整 PDF 報告' : 'All 13 modules in full + personalised deep-dive + complete PDF report'}
