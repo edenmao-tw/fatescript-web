@@ -26,6 +26,53 @@ const SIYU = [
   { symbol: '◉', name: '月孛', role: '隱藏的阻力', desc: '月亮的暗面。月孛代表你最難突破的慣性，那個領域特別容易感覺卡住、繞圈子，但突破之後成長也最深。' },
 ];
 
+const ZODIAC_SEASONS = [
+  {
+    season: '春', element: '木', note: '木旺——生長、啟動、向外擴張',
+    color: 'from-emerald-900/30 to-emerald-900/10',
+    border: 'border-emerald-700/30',
+    labelColor: 'text-emerald-400',
+    signs: [
+      { symbol: '♈', zh: '牡羊座', en: 'Aries',       dates: '3/21–4/19',  planet: '火星', planetSymbol: '♂' },
+      { symbol: '♉', zh: '金牛座', en: 'Taurus',      dates: '4/20–5/20',  planet: '金星', planetSymbol: '♀' },
+      { symbol: '♊', zh: '雙子座', en: 'Gemini',      dates: '5/21–6/20',  planet: '水星', planetSymbol: '☿' },
+    ],
+  },
+  {
+    season: '夏', element: '火', note: '火旺——熱情、行動力、能量最強',
+    color: 'from-orange-900/30 to-orange-900/10',
+    border: 'border-orange-700/30',
+    labelColor: 'text-orange-400',
+    signs: [
+      { symbol: '♋', zh: '巨蟹座', en: 'Cancer',      dates: '6/21–7/22',  planet: '月亮', planetSymbol: '☽' },
+      { symbol: '♌', zh: '獅子座', en: 'Leo',         dates: '7/23–8/22',  planet: '太陽', planetSymbol: '☉' },
+      { symbol: '♍', zh: '處女座', en: 'Virgo',       dates: '8/23–9/22',  planet: '水星', planetSymbol: '☿' },
+    ],
+  },
+  {
+    season: '秋', element: '金', note: '金旺——收斂、成熟、刀鋒最利',
+    color: 'from-yellow-900/30 to-yellow-900/10',
+    border: 'border-yellow-700/30',
+    labelColor: 'text-yellow-400',
+    signs: [
+      { symbol: '♎', zh: '天秤座', en: 'Libra',       dates: '9/23–10/22', planet: '金星', planetSymbol: '♀' },
+      { symbol: '♏', zh: '天蠍座', en: 'Scorpio',     dates: '10/23–11/21',planet: '火星', planetSymbol: '♂' },
+      { symbol: '♐', zh: '射手座', en: 'Sagittarius', dates: '11/22–12/21',planet: '木星', planetSymbol: '♃' },
+    ],
+  },
+  {
+    season: '冬', element: '水', note: '水旺——潛藏、積蓄、等待出發',
+    color: 'from-blue-900/30 to-blue-900/10',
+    border: 'border-blue-700/30',
+    labelColor: 'text-blue-400',
+    signs: [
+      { symbol: '♑', zh: '摩羯座', en: 'Capricorn',   dates: '12/22–1/19', planet: '土星', planetSymbol: '♄' },
+      { symbol: '♒', zh: '水瓶座', en: 'Aquarius',    dates: '1/20–2/18',  planet: '土星', planetSymbol: '♄' },
+      { symbol: '♓', zh: '雙魚座', en: 'Pisces',      dates: '2/19–3/20',  planet: '木星', planetSymbol: '♃' },
+    ],
+  },
+];
+
 const HOUSES = [
   { num: '01', name: '命宮', topic: '你是誰' },
   { num: '02', name: '財帛宮', topic: '錢與財富' },
@@ -117,6 +164,65 @@ function ZhHomePage() {
               <p className="text-sm text-[#e8d5a3]/60 leading-relaxed">{p.desc}</p>
             </div>
           ))}
+        </div>
+
+        {/* ── 星座 × 季節 × 七政 ── */}
+        <div className="flex items-center gap-4 mb-10">
+          <div className="flex-1 h-px bg-[#e8d5a3]/15" />
+          <span className="text-[#e8d5a3]/30 text-sm tracking-widest">星座 × 季節 × 七政</span>
+          <div className="flex-1 h-px bg-[#e8d5a3]/15" />
+        </div>
+
+        <div className="mb-8 text-center">
+          <p className="text-[#e8d5a3]/55 text-sm leading-relaxed">
+            你知道自己是什麼星座——但七政四餘告訴你的，是那個星座背後的<strong className="text-[#e8d5a3]">主宰行星</strong>，才是你真正的能量來源。<br />
+            而且出生的季節，決定了那顆星的力量是強是弱。
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+          {ZODIAC_SEASONS.map((s) => (
+            <div key={s.season} className={`rounded-2xl p-5 border bg-gradient-to-b ${s.color} ${s.border}`}>
+              <div className="flex items-center gap-2 mb-1">
+                <span className={`text-lg font-bold ${s.labelColor}`}>{s.season}</span>
+                <span className={`text-xs px-2 py-0.5 rounded-full border ${s.border} ${s.labelColor} opacity-80`}>
+                  {s.element}旺
+                </span>
+              </div>
+              <p className="text-xs text-[#e8d5a3]/40 mb-4">{s.note}</p>
+              <div className="flex flex-col gap-3">
+                {s.signs.map((z) => (
+                  <div key={z.zh} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl w-7 text-center">{z.symbol}</span>
+                      <div>
+                        <span className="text-sm font-semibold text-[#e8d5a3]">{z.zh}</span>
+                        <span className="ml-1.5 text-xs text-[#e8d5a3]/40">{z.en}</span>
+                        <span className="ml-1.5 text-xs text-[#e8d5a3]/30">{z.dates}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <span className="text-base text-[#e8d5a3]/70">{z.planetSymbol}</span>
+                      <span className="text-xs text-[#e8d5a3]/50">{z.planet}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Insight callout */}
+        <div className="border border-[#e8d5a3]/15 rounded-2xl p-5 mb-16 bg-[#e8d5a3]/3">
+          <p className="text-sm text-[#e8d5a3]/65 leading-relaxed">
+            <span className="text-[#e8d5a3] font-semibold">💡 跟一般星座的差別是什麼？</span><br /><br />
+            一般的「星座運勢」只看你出生時太陽在哪個星座——全球幾億人共用同一篇文章。
+            七政四餘不同，它同時計算七顆行星在你出生那一刻的確切位置，
+            以及你的<strong className="text-[#e8d5a3]">上升星座</strong>（命宮）的主宰星，才是你真正的「命主星」。
+            <br /><br />
+            同樣是獅子座，但如果你的上升在射手（木星主宰）和上升在金牛（金星主宰），
+            整個人生主題完全不同——這才是七政四餘解讀的核心。
+          </p>
         </div>
 
         {/* Divider */}
