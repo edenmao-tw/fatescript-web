@@ -123,10 +123,10 @@ function ZhHomePage() {
           <div className="mb-6 px-4 py-1.5 border border-[#e8d5a3]/30 rounded-full text-sm tracking-widest text-[#e8d5a3]/70">
             七政四餘 · 天文命理
           </div>
-          <p className="text-base md:text-lg text-[#e8d5a3]/60 mb-3 tracking-wide">
+          <p className="text-base md:text-lg text-white mb-3 tracking-wide">
             「12 星座是制服，七政四餘是量身定做。」
           </p>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight max-w-2xl">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight md:whitespace-nowrap">
             {t('hero_title')}
           </h1>
           <p className="text-lg md:text-xl text-[#e8d5a3]/70 mb-10 max-w-xl">
