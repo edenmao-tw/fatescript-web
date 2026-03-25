@@ -120,25 +120,12 @@ function ZhHomePage() {
           style={{ backgroundImage: 'radial-gradient(circle, #e8d5a3 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
 
         <div className="relative z-10 flex flex-col items-center">
-          {/* Intro blurb */}
-          <div className="max-w-2xl mb-10 space-y-4">
-            <p className="text-lg md:text-xl font-semibold text-white">
-              「12 星座是制服，七政四餘是量身定做。」
-            </p>
-            <p className="text-sm md:text-base text-[#e8d5a3]/70 leading-relaxed">
-              大部分人熟悉的「12 星座」，像是大數據下的集體標籤——全球有幾億人共享同一個星座。七政四餘不一樣，它是你出生那一刻，宇宙為你拍下的「星空斷層掃描」。
-            </p>
-            <p className="text-sm md:text-base text-[#e8d5a3]/70 leading-relaxed">
-              <strong className="text-[#e8d5a3]">「七政」</strong>是天空中真實運行的七顆行星，勾勒出你的天賦與行為模式；<strong className="text-[#e8d5a3]">「四餘」</strong>則是月亮軌道上四個看不見的能量交點，埋藏著你靈魂深處的執念、業力與福報。
-            </p>
-            <p className="text-sm md:text-base text-[#e8d5a3]/70 leading-relaxed">
-              兩者交織成一張只屬於你的星體地圖——不只告訴你「你是誰」，更揭示你為何這樣思考、為何在那裡卡住，以及最重要的：你什麼時候會迎來屬於你的風口。
-            </p>
-          </div>
-
           <div className="mb-6 px-4 py-1.5 border border-[#e8d5a3]/30 rounded-full text-sm tracking-widest text-[#e8d5a3]/70">
             七政四餘 · 天文命理
           </div>
+          <p className="text-base md:text-lg text-[#e8d5a3]/60 mb-3 tracking-wide">
+            「12 星座是制服，七政四餘是量身定做。」
+          </p>
           <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight max-w-2xl">
             {t('hero_title')}
           </h1>
@@ -175,18 +162,28 @@ function ZhHomePage() {
       </section>
 
       {/* ── 什麼是七政四餘 ── */}
-      <section className="relative px-6 py-20 max-w-3xl mx-auto">
+      <section className="relative px-6 py-20 max-w-5xl mx-auto">
         <div className="text-center mb-12">
           <p className="text-xs tracking-widest text-[#e8d5a3]/40 mb-3">ABOUT THE SYSTEM</p>
-          <h2 className="text-3xl md:text-4xl font-bold mb-5">什麼是七政四餘？</h2>
-          <p className="text-[#e8d5a3]/65 leading-relaxed text-base md:text-lg">
-            大部分人熟悉的「12 星座」，是按出生月份分的——全球有幾億人跟你「同一個星座」。<br className="hidden md:block" />
-            七政四餘不一樣。它根據你出生那一刻，<strong className="text-[#e8d5a3]">天上星體的真實位置</strong>，計算出只屬於你的命盤。
+          <h2 className="text-4xl md:text-5xl font-bold mb-8">什麼是七政四餘？</h2>
+          <p className="text-[#e8d5a3]/75 leading-relaxed text-base md:text-lg mb-4 max-w-3xl mx-auto">
+            大部分人熟悉的「12 星座」是按出生月份劃分的，如同大數據下的集體標籤，全球有數億人共享同一個星座。但「七政四餘」截然不同——它是根據你出生那一刻，<strong className="text-[#e8d5a3]">天上星體的真實位置</strong>，為你拍下的「星空斷層掃描」。這是一張只屬於你的個人命盤，而非大眾化的通用模板。
           </p>
-          <p className="mt-4 text-[#e8d5a3]/65 leading-relaxed text-base md:text-lg">
-            七政指的是七顆行星，四餘是月亮軌道上四個看不見的力量點。
-            兩者加在一起，構成一張完整的星體地圖——
-            說的是你<strong className="text-[#e8d5a3]">為什麼會這樣想、這樣選擇、這樣卡住</strong>，以及你什麼時候會走運。
+          <p className="text-[#e8d5a3]/60 leading-relaxed text-sm md:text-base mb-8 max-w-2xl mx-auto">
+            這套系統由兩個核心維度交織而成：
+          </p>
+          <div className="grid md:grid-cols-2 gap-4 mb-8 text-left max-w-3xl mx-auto">
+            <div className="bg-[#e8d5a3]/5 border border-[#e8d5a3]/15 rounded-2xl p-6">
+              <p className="text-[#e8d5a3] font-bold text-lg mb-2">「七政」</p>
+              <p className="text-[#e8d5a3]/70 text-sm leading-relaxed">天空中真實運行的七顆行星，勾勒出你的天賦才華與行為模式——你的驅動力、思維方式、與人互動的本能。</p>
+            </div>
+            <div className="bg-[#e8d5a3]/5 border border-[#e8d5a3]/15 rounded-2xl p-6">
+              <p className="text-[#e8d5a3] font-bold text-lg mb-2">「四餘」</p>
+              <p className="text-[#e8d5a3]/70 text-sm leading-relaxed">月亮軌道上四個看不見的能量交點，埋藏著你靈魂深處的執念、業力與福報——那些你自己也說不清楚的深層模式。</p>
+            </div>
+          </div>
+          <p className="text-[#e8d5a3]/75 leading-relaxed text-base md:text-lg max-w-3xl mx-auto">
+            這張完整的星體地圖不只告訴你「你是誰」，更深層地揭示了你為何會這樣思考、為何在特定之處卡住，以及最重要的：<strong className="text-[#e8d5a3]">你什麼時候會迎來屬於自己的風口與好運。</strong>
           </p>
         </div>
 
